@@ -1,0 +1,13 @@
+---
+description: Match Monster のリリース優先・MVP スコープ方針（常時適用）
+alwaysApply: true
+---
+
+# プロダクト方針
+
+実装・設計・機能提案の前に `docs/PRODUCT_POLICY.md` に従う。
+
+- **なるはやリリース**と**広告収入**を最優先する。
+- 機能は**リリースに耐える最低限**に限定する。収益・リリースに直結しない拡張は提案のみに留め、着手はユーザーの明示指示後。
+- 画面仕様は `docs/design/` を参照。本方針を各設計書に重複記載しない。
+- 実装タスク完了前は `docs/PRODUCT_POLICY.md` の実装後セルフレビュー（`.cursor/rules/post-implementation-review.mdc`）に従う。

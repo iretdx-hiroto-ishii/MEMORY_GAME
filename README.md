@@ -11,7 +11,31 @@ https://memory-game-three-mauve.vercel.app
 - React
 - TypeScript
 - Vite
-- CSS Module
+- Capacitor（iOS / App Store 向け）
+
+## 開発・リリース
+
+```bash
+npm ci
+npm run dev      # ローカル開発
+npm run lint
+npm run build
+```
+
+| ドキュメント | 内容 |
+|--------------|------|
+| [`docs/PRODUCT_POLICY.md`](docs/PRODUCT_POLICY.md) | 開発方針・セルフレビュー |
+| [`docs/APP_STORE_RELEASE.md`](docs/APP_STORE_RELEASE.md) | App Store・AdMob・Capacitor |
+| [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md) | 提出直前チェック |
+
+環境変数は [`.env.example`](.env.example) を `.env` にコピーして設定。
+
+**プライバシーポリシー（ストア必須）:** 本番は `/privacy-policy.html`（ソース: [`public/privacy-policy.html`](public/privacy-policy.html)）。運営者名・連絡先を記載してから提出すること。
+
+```bash
+npm run cap:sync   # build + Capacitor 同期（ios/ 生成後）
+npm run cap:ios    # Xcode で開く
+```
 
 ## 特徴
 - スマホでも快適に操作できるレスポンシブ対応

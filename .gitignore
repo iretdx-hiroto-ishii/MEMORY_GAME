@@ -134,3 +134,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Capacitor / Xcode (commit ios/ project; ignore local noise)
+ios/App/Pods/
+**/xcuserdata/
+*.xcuserstate
