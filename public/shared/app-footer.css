@@ -1,0 +1,12 @@
+/* 静的ページ用。React 側は src/components/app-footer.css と同期すること */
+.app-footer {
+  width: 100%;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.app-footer__copyright {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #999;
+}

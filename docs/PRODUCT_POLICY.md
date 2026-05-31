@@ -19,6 +19,7 @@
 | リファクタ・抽象化 | 今回の Must に直結するときのみ。見た目の整理だけは後回し |
 | 依存パッケージ | 原則追加しない（広告 SDK 等は別タスクで明示） |
 | 設計書 | 画面ごと `docs/design/<画面ID>.md`。本ファイルの方針は **コピーしない** |
+| UI 共通 | 全画面 [`docs/design/UI_COMMON.md`](design/UI_COMMON.md)（`AppFooter`・コピーライト Must） |
 | 実装タスク完了前 | [実装後の品質（セルフレビュー）](#実装後の品質セルフレビュー) を実施する |
 
 ## 実装後の品質（セルフレビュー）
@@ -51,5 +52,6 @@
 ## 関連ドキュメント
 
 - 画面設計: [`docs/design/`](design/)（テンプレート: [`_template.md`](design/_template.md)）
+- UI 共通: [`docs/design/UI_COMMON.md`](design/UI_COMMON.md)
 - App Store リリース: [`APP_STORE_RELEASE.md`](APP_STORE_RELEASE.md)
 - 提出チェック: [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md)

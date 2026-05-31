@@ -49,6 +49,7 @@
 - 対象デバイス: スマホ Web（レスポンシブ）を主、PC は副次。
 - 技術スタック: React + TypeScript + Vite。
 - 既存デザイン（配色・フォント感）との整合を維持。
+- **UI 共通:** [`UI_COMMON.md`](UI_COMMON.md) に従う（全画面 `AppFooter` + コピーライト Must）。
 
 ### 3.3 画面遷移
 
@@ -76,6 +77,7 @@ flowchart LR
 
 | ID | 種別 | 表示名 / ラベル | 操作 | Must |
 |----|------|-----------------|------|------|
+| `app-footer` | 共通 [`AppFooter`](../../src/components/AppFooter.tsx) | コピーライト | なし | ✅（全画面） |
 | | | | | |
 
 ### 4.3 モーダル・オーバーレイ

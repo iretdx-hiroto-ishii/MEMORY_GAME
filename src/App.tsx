@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
+import AppFooter from './components/AppFooter';
 
 const images = import.meta.glob('/src/assets/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
 const allIcons = Object.values(images).map((mod) => mod.default);
@@ -239,13 +240,11 @@ function App() {
           </button>
         ))}
       </div>
-      <footer className="footer">
-        <div className="footer-buttons">
+      <AppFooter>
           <button className="footer-button" onClick={openRules}>📋</button>
         <button className="footer-button" onClick={resetGame}>🔁</button>
           <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
-        </div>
-      </footer>
+      </AppFooter>
     </div>
   );
 }

@@ -21,14 +21,6 @@
   filter: grayscale(40%);
 }
 
-.footer-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 16px; /* ボタン間のスペース */
-}
-
 .footer-button {
   background-color: transparent;
   font-size: 50px;
@@ -243,8 +235,5 @@ ul {
   }
   header {
     height: auto;
-  }
-  .footer-button {
-    font-size: 10vw;
   }
 }
