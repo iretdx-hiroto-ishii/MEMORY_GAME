@@ -2,10 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
 import AppFooter from './components/AppFooter';
+import SettingsModal from './components/SettingsModal';
+import TopAdBanner from './components/TopAdBanner';
+import TitleScreen from './screens/TitleScreen';
+import { useGameSettings } from './hooks/useGameSettings';
 
 const images = import.meta.glob('/src/assets/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
 const allIcons = Object.values(images).map((mod) => mod.default);
 const basePoint = 10;
+const APP_VERSION = '1.1.1';
+
+type AppScreen = 'title' | 'play';
 
 interface Card {
   id: number,
@@ -44,6 +51,10 @@ function App() {
   const [isFinished, setIsFinished] = useState(false);
   const [isViewResult, setIsViewResult] = useState(false);
   const [isViewRules, setIsViewRules] = useState(false);
+  const [appScreen, setAppScreen] = useState<AppScreen>('title');
+  const [isViewSettings, setIsViewSettings] = useState(false);
+  const [isStartingGame, setIsStartingGame] = useState(false);
+  const { settings, setSoundEnabled, setVolume } = useGameSettings();
 
   useEffect(() => {
     setCards(shuffledCardsRef.current);
@@ -147,6 +158,26 @@ function App() {
     setIsViewRules(true)
   }
 
+  const openSettings = () => {
+    setIsViewSettings(true);
+  }
+
+  const closeSettings = () => {
+    setIsViewSettings(false);
+  }
+
+  const startGame = () => {
+    if (isStartingGame) return;
+    setIsStartingGame(true);
+    setIsViewSettings(false);
+    setAppScreen('play');
+
+    window.setTimeout(() => {
+      resetGame();
+      setIsStartingGame(false);
+    }, 0);
+  }
+
   const resetParameter = () => {
     setSelected([]);
     setPoint(0);
@@ -172,79 +203,105 @@ function App() {
     }, 5000); // 5秒（5000ミリ秒）
   }
 
-  return (
-    <div className="container">
-      { countdown !== null && (
-        <div className="shadow-overlay">
-          <span className="countdown-text">{countdown}</span>
+  if (appScreen === 'title') {
+    return (
+      <div className="app-root">
+        <TopAdBanner />
+        <div className="app-shell app-content">
+          <TitleScreen
+            onStart={startGame}
+            onOpenSettings={openSettings}
+            isStartDisabled={isStartingGame}
+            version={APP_VERSION}
+          />
         </div>
-      )}
-      {isViewResult && (
-        <div className="shadow-overlay">
-          <div className="result-overlay">
-            <div className="title-box">
-              <span className="title">RESULT</span>
-            </div>
-            <div className="result-row">
-              <span className="result-text">POINT: {point}</span>
-              <span className="result-text">MAX COMBO: {maxCombo}</span>
-            </div>
-            <div className="record-box">
-            </div>
-            <button className="close-button" onClick={closeResult}>
-              ❎
-            </button>
-          </div>
-        </div>
-      )}
-      {isViewRules && (
-        <div className="shadow-overlay">
-          <div className="rules-overlay">
-            <div className="title-box">
-              <span className="title">RULES</span>
-            </div>
-            <div className="rules-row">
-              <ul>
-                <li>ゲーム開始後の５秒間は絵柄を覚えるチャンス！</li>
-                <li>同じ絵柄をそろえてポイントゲット！</li>
-                <li>連続で正解するとコンボボーナス加算！</li>
-                <li>📋：ルール表示</li>
-                <li>🔁：ゲーム開始/リセット</li>
-                <li>🏁：リザルト画面を表示</li>
-              </ul>
-            </div>
-            <button className="close-button" onClick={closeRules}>
-              ❎
-            </button>
-          </div>
-        </div>
-      )}
-    <header className="header">
-      <h1>Match Monster</h1>
-    </header>    
-      <StatusBar point={point} comboCount={comboCount} />
-      <div className="grid">
-        {cards.map((card, i) => (
-          <button
-            key={card.id}
-            onClick={() => flipCard(i)}
-            disabled={card.flipped || card.matched}
-            className="card"
-          >
-            <img src={card.icon} alt="monster" className="card-image" />
-            <img
-              src="/card-back.png"
-              alt="back"
-              className={`card-back-image ${card.flipped ? "hidden" : ""}`}
-            />
-          </button>
-        ))}
+        <SettingsModal
+          isOpen={isViewSettings}
+          soundEnabled={settings.soundEnabled}
+          volume={settings.volume}
+          onToggleSound={() => setSoundEnabled(!settings.soundEnabled)}
+          onVolumeChange={setVolume}
+          onClose={closeSettings}
+        />
       </div>
-      <AppFooter>
-          <button className="footer-button" onClick={openRules}>📋</button>
-        <button className="footer-button" onClick={resetGame}>🔁</button>
-          <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
-      </AppFooter>
+    );
+  }
+
+  return (
+    <div className="app-root">
+      <div className="container play-screen">
+        { countdown !== null && (
+          <div className="shadow-overlay">
+            <span className="countdown-text">{countdown}</span>
+          </div>
+        )}
+        {isViewResult && (
+          <div className="shadow-overlay">
+            <div className="result-overlay">
+              <div className="title-box">
+                <span className="title">RESULT</span>
+              </div>
+              <div className="result-row">
+                <span className="result-text">POINT: {point}</span>
+                <span className="result-text">MAX COMBO: {maxCombo}</span>
+              </div>
+              <div className="record-box">
+              </div>
+              <button className="close-button" onClick={closeResult}>
+                ❎
+              </button>
+            </div>
+          </div>
+        )}
+        {isViewRules && (
+          <div className="shadow-overlay">
+            <div className="rules-overlay">
+              <div className="title-box">
+                <span className="title">RULES</span>
+              </div>
+              <div className="rules-row">
+                <ul>
+                  <li>ゲーム開始後の５秒間は絵柄を覚えるチャンス！</li>
+                  <li>同じ絵柄をそろえてポイントゲット！</li>
+                  <li>連続で正解するとコンボボーナス加算！</li>
+                  <li>📋：ルール表示</li>
+                  <li>🔁：ゲーム開始/リセット</li>
+                  <li>🏁：リザルト画面を表示</li>
+                </ul>
+              </div>
+              <button className="close-button" onClick={closeRules}>
+                ❎
+              </button>
+            </div>
+          </div>
+        )}
+      <header className="header">
+        <h1>Match Monster</h1>
+      </header>    
+        <StatusBar point={point} comboCount={comboCount} />
+        <div className="grid">
+          {cards.map((card, i) => (
+            <button
+              key={card.id}
+              onClick={() => flipCard(i)}
+              disabled={card.flipped || card.matched}
+              className="card"
+            >
+              <img src={card.icon} alt="monster" className="card-image" />
+              <img
+                src="/card-back.png"
+                alt="back"
+                className={`card-back-image ${card.flipped ? "hidden" : ""}`}
+              />
+            </button>
+          ))}
+        </div>
+        <AppFooter>
+            <button className="footer-button" onClick={openRules}>📋</button>
+          <button className="footer-button" onClick={resetGame}>🔁</button>
+            <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
+        </AppFooter>
+      </div>
     </div>
   );
 }
