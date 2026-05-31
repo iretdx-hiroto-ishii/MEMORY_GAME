@@ -3,10 +3,17 @@
   width: 100%;
   margin-top: 1rem;
   text-align: center;
+  min-height: 28px;
 }
 
 .app-footer__copyright {
   margin: 0;
   font-size: 0.8rem;
   color: #999;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  text-align: center;
+  z-index: 10;
 }

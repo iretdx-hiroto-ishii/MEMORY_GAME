@@ -230,9 +230,6 @@ ul {
     max-width: 100vw;
     padding: 0 5vw;
   }
-  p {
-    display: none;
-  }
   header {
     height: auto;
   }
