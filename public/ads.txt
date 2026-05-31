@@ -1,0 +1,3 @@
+# Web demo (AdSense) only. Replace with your real line after AdSense approval.
+# Format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# App Store builds use AdMob — see docs/APP_STORE_RELEASE.md (ads.txt is not used on iOS).
