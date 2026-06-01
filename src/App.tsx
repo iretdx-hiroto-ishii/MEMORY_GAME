@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
 import AppFooter from './components/AppFooter';
+import RulesModal from './components/RulesModal';
 import SettingsModal from './components/SettingsModal';
 import TopAdBanner from './components/TopAdBanner';
 import TitleScreen from './screens/TitleScreen';
@@ -211,10 +212,12 @@ function App() {
           <TitleScreen
             onStart={startGame}
             onOpenSettings={openSettings}
+            onOpenHowTo={openRules}
             isStartDisabled={isStartingGame}
             version={APP_VERSION}
           />
         </div>
+        <RulesModal isOpen={isViewRules} onClose={closeRules} />
         <SettingsModal
           isOpen={isViewSettings}
           soundEnabled={settings.soundEnabled}
@@ -253,28 +256,7 @@ function App() {
             </div>
           </div>
         )}
-        {isViewRules && (
-          <div className="shadow-overlay">
-            <div className="rules-overlay">
-              <div className="title-box">
-                <span className="title">RULES</span>
-              </div>
-              <div className="rules-row">
-                <ul>
-                  <li>ゲーム開始後の５秒間は絵柄を覚えるチャンス！</li>
-                  <li>同じ絵柄をそろえてポイントゲット！</li>
-                  <li>連続で正解するとコンボボーナス加算！</li>
-                  <li>📋：ルール表示</li>
-                  <li>🔁：ゲーム開始/リセット</li>
-                  <li>🏁：リザルト画面を表示</li>
-                </ul>
-              </div>
-              <button className="close-button" onClick={closeRules}>
-                ❎
-              </button>
-            </div>
-          </div>
-        )}
+        <RulesModal isOpen={isViewRules} onClose={closeRules} />
       <header className="header">
         <h1>Match Monster</h1>
       </header>    

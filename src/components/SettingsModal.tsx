@@ -1,14 +1,5 @@
 import './settings-modal.css';
 
-type SettingsModalProps = {
-  isOpen: boolean;
-  soundEnabled: boolean;
-  volume: number;
-  onToggleSound: () => void;
-  onVolumeChange: (volume: number) => void;
-  onClose: () => void;
-};
-
 const SettingsModal = ({
   isOpen,
   soundEnabled,
@@ -16,7 +7,14 @@ const SettingsModal = ({
   onToggleSound,
   onVolumeChange,
   onClose,
-}: SettingsModalProps) => {
+}: {
+  isOpen: boolean;
+  soundEnabled: boolean;
+  volume: number;
+  onToggleSound: () => void;
+  onVolumeChange: (volume: number) => void;
+  onClose: () => void;
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -39,11 +37,11 @@ const SettingsModal = ({
             onClick={onToggleSound}
             aria-label="サウンドのオンオフ"
           >
-            {soundEnabled ? 'ON' : 'OFF'}
+            {soundEnabled ? 'オン' : 'オフ'}
           </button>
         </div>
         <div className="settings-modal__row settings-modal__row--slider">
-          <label htmlFor="settings-volume">音量</label>
+          <label htmlFor="settings-volume">効果音</label>
           <input
             id="settings-volume"
             type="range"
@@ -52,9 +50,12 @@ const SettingsModal = ({
             value={volume}
             disabled={!soundEnabled}
             onChange={(event) => onVolumeChange(Number(event.target.value))}
-            aria-label="音量スライダー"
+            aria-label="効果音スライダー"
           />
-          <span>{volume}%</span>
+          <span className="settings-modal__volume-value" aria-live="polite">
+            <span className="settings-modal__volume-number">{volume}</span>
+            <span className="settings-modal__volume-unit">%</span>
+          </span>
         </div>
         <button
           type="button"

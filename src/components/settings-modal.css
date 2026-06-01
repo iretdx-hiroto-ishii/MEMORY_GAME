@@ -62,12 +62,34 @@
 }
 
 .settings-modal__row--slider {
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 4ch;
+  align-items: center;
+  width: 100%;
 }
 
 .settings-modal__row--slider input {
-  flex: 1;
-  min-width: 180px;
+  width: 100%;
+  min-width: 0;
+}
+
+.settings-modal__row--slider > span {
+  width: 4ch;
+}
+
+.settings-modal__volume-value {
+  display: grid;
+  grid-template-columns: 3ch 1ch;
+  width: 4ch;
+}
+
+.settings-modal__volume-number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-modal__volume-unit {
+  text-align: right;
 }
 
 .settings-modal__toggle {
@@ -76,13 +98,16 @@
   border-radius: 999px;
   background-color: #1e1e1e;
   color: #fff;
+  font-size: 10pt;
   font-weight: bold;
 }
 
 .settings-modal__close {
-  align-self: flex-end;
+  align-self: center;
   background: transparent;
   color: #fff;
   font-size: 2rem;
   line-height: 1;
+  border: none;
+  cursor: pointer;
 }

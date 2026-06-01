@@ -4,6 +4,7 @@ import './title-screen.css';
 type TitleScreenProps = {
   onStart: () => void;
   onOpenSettings: () => void;
+  onOpenHowTo: () => void;
   isStartDisabled: boolean;
   version: string;
 };
@@ -11,6 +12,7 @@ type TitleScreenProps = {
 const TitleScreen = ({
   onStart,
   onOpenSettings,
+  onOpenHowTo,
   isStartDisabled,
   version,
 }: TitleScreenProps) => {
@@ -26,7 +28,15 @@ const TitleScreen = ({
             disabled={isStartDisabled}
             aria-label="ゲームを開始"
           >
-            START
+            スタート
+          </button>
+          <button
+            type="button"
+            className="title-screen__button title-screen__button--secondary"
+            onClick={onOpenHowTo}
+            aria-label="遊び方を見る"
+          >
+            遊び方 📋
           </button>
           <button
             type="button"
@@ -35,6 +45,14 @@ const TitleScreen = ({
             aria-label="設定を開く"
           >
             設定 ⚙
+          </button>
+          <button
+            type="button"
+            className="title-screen__button title-screen__button--secondary title-screen__button--policy"
+            onClick={() => window.location.assign('/privacy-policy.html')}
+            aria-label="プライバシーポリシーを開く"
+          >
+            プライバシーポリシー
           </button>
         </div>
       </main>
