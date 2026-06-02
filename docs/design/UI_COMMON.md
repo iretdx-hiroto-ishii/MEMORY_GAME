@@ -122,6 +122,17 @@ import AppFooter from './components/AppFooter';
 | 閉じるボタン（❎） | `font-size: 2rem`, `align-self: center`, `background: transparent`, `border: none` |
 | 適用対象 | 遊び方 / 設定 / 結果 ダイアログ |
 
+### 4.5 ダイアログコンポーネント分割規定（Must）
+
+ダイアログ（モーダル）は必ず **`src/components/` 配下に個別の `.tsx` ファイルとして作成する**。親コンポーネント内にインラインで JSX を書かない。
+
+| 項目 | 規定 |
+|------|------|
+| 配置場所 | `src/components/` |
+| 命名 | `コンポーネント名.tsx`（例: `ResultModal.tsx`, `RulesModal.tsx`） |
+| スタイル | ダイアログ固有の CSS が必要な場合は同名 `.css` を作成 |
+| 共通スタイル | `App.css` の共通クラス（`.shadow-overlay`, `.dialog-title-box` 等）はそのまま使用 |
+
 ---
 
 ## 5. 変更履歴
@@ -136,3 +147,4 @@ import AppFooter from './components/AppFooter';
 | 2026-06-03 | ダイアログタイトル表示規定を追加（白線位置・文字スタイル統一） |
 | 2026-06-03 | 4.3 にコンテナ `padding`/`gap` 規定を追加（白線位置崩れの根本解消） |
 | 2026-06-03 | 4.4 ダイアログ内コンテンツ・閉じるボタン規定を追加 |
+| 2026-06-03 | 4.5 ダイアログコンポーネント分割規定を追加（結果ダイアログを個別ファイル化） |
