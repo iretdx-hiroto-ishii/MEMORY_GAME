@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
 import AppFooter from './components/AppFooter';
+import ResultModal from './components/ResultModal';
 import RulesModal from './components/RulesModal';
 import SettingsModal from './components/SettingsModal';
 import TopAdBanner from './components/TopAdBanner';
@@ -51,6 +52,7 @@ function App() {
   const [countdown, setCountdown] = useState<number | string | null>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [isViewResult, setIsViewResult] = useState(false);
+  const [animateResult, setAnimateResult] = useState(false);
   const [isViewRules, setIsViewRules] = useState(false);
   const [appScreen, setAppScreen] = useState<AppScreen>('title');
   const [isViewSettings, setIsViewSettings] = useState(false);
@@ -107,6 +109,7 @@ function App() {
     if (!cards.find(card => card.flipped == false)) {
       setIsFinished(true);
       setTimeout(() => {
+        setAnimateResult(true);
         setIsViewResult(true);
       }, 1000)
     }
@@ -144,7 +147,8 @@ function App() {
   };
 
   const closeResult = () => {
-    setIsViewResult(false)
+    setIsViewResult(false);
+    setAnimateResult(false);
   }
 
   const openResult = () => {
@@ -238,24 +242,7 @@ function App() {
             <span className="countdown-text">{countdown}</span>
           </div>
         )}
-        {isViewResult && (
-          <div className="shadow-overlay">
-            <div className="result-overlay">
-              <div className="title-box">
-                <span className="title">RESULT</span>
-              </div>
-              <div className="result-row">
-                <span className="result-text">POINT: {point}</span>
-                <span className="result-text">MAX COMBO: {maxCombo}</span>
-              </div>
-              <div className="record-box">
-              </div>
-              <button className="close-button" onClick={closeResult}>
-                ❎
-              </button>
-            </div>
-          </div>
-        )}
+        <ResultModal isOpen={isViewResult} point={point} maxCombo={maxCombo} animate={animateResult} onClose={closeResult} />
         <RulesModal isOpen={isViewRules} onClose={closeRules} />
       <header className="header">
         <h1>Match Monster</h1>

@@ -111,6 +111,8 @@
   left: 0;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  padding: 10vh 0;
   background-color: rgba(0, 0, 0, 0.6); /* 半透明の背景 */
   display: flex;
   justify-content: center;
@@ -126,27 +128,27 @@
 
 .close-button {
   background-color: transparent;
-  font-size: 50px;
+  font-size: 2rem;
+  line-height: 1;
   color: white;
   border: none;
   cursor: pointer;
-  bottom: 10px;
-  height: fit-content;
+  align-self: center;
 }
 
 .result-overlay {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  width: 70%;
-  height: 70%;
+  width: min(70vw, 420px);
+  height: fit-content;
+  max-height: 100%;
   background-color: rgba(57, 0, 77, 0.95);
   border: 5px solid #B38600;
   box-shadow: 0 0 7px 5px #ffffff;   
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  overflow: auto;
   z-index: 9999;
 }
 
@@ -159,9 +161,12 @@
 
 .result-text {
   color: white;
-  font-size: 30px;
-  animation: pop 1s ease-in-out;
+  font-size: 1rem;
   text-align: center;
+}
+
+.result-text--animate {
+  animation: pop 1s ease-in-out;
 }
 
 .record-box {
@@ -170,18 +175,18 @@
 }
 
 .rules-overlay {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  width: 70%;
-  height: 70%;
+  width: min(70vw, 420px);
+  height: fit-content;
+  max-height: 100%;
   background-color: rgba(57, 0, 77, 0.95);
   border: 5px solid #B38600;
   box-shadow: 0 0 7px 5px #ffffff;   
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  overflow: auto;
   z-index: 9999;
 }
 
@@ -193,25 +198,17 @@
   margin: 0 5%;
 }
 
-.title {
-  color: white;
-  font-size: 55px;
-  font-weight: bold;
-  text-align: center;
-  letter-spacing: 3px;
-}
-
-.title-box {
-  height: 20%;
+.dialog-title-box {
   display: flex;
   justify-content: center;
-  align-items: center;
   position: relative;
-  margin: 20px;
+  padding: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.title-box::before,
-.title-box::after {
+.dialog-title-box::before,
+.dialog-title-box::after {
   content: '';
   position: absolute;
   width: 100%;
@@ -219,12 +216,21 @@
   background: white;
 }
 
-.title-box::before {
+.dialog-title-box::before {
   top: 0;
 }
 
-.title-box::after {
+.dialog-title-box::after {
   bottom: 0;
+}
+
+.dialog-title {
+  color: white;
+  margin: 0;
+  font-size: 1.6rem;
+  text-align: center;
+  letter-spacing: 2px;
+  line-height: 1.2;
 }
 
 ul {

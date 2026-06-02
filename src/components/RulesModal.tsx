@@ -9,17 +9,14 @@ const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
   return (
     <div className="shadow-overlay">
       <div className="rules-overlay" role="dialog" aria-modal="true" aria-label="遊び方">
-        <div className="title-box">
-          <span className="title">RULES</span>
+        <div className="dialog-title-box">
+          <h2 className="dialog-title">遊び方</h2>
         </div>
         <div className="rules-row">
           <ul>
             <li>ゲーム開始後の５秒間は絵柄を覚えるチャンス！</li>
             <li>同じ絵柄をそろえてポイントゲット！</li>
             <li>連続で正解するとコンボボーナス加算！</li>
-            <li>📋：ルール表示</li>
-            <li>🔁：ゲーム開始/リセット</li>
-            <li>🏁：リザルト画面を表示</li>
           </ul>
         </div>
         <button className="close-button" onClick={onClose} aria-label="遊び方を閉じる">
