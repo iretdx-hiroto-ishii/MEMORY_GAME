@@ -8,9 +8,11 @@
 .app-footer__actions {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  width: min(100%, 800px);
+  padding: 0 12px;
+  box-sizing: border-box;
   margin-bottom: 8px;
 }
 

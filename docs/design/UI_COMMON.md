@@ -51,7 +51,7 @@
 import AppFooter from './components/AppFooter';
 
 <AppFooter>
-  {/* 画面固有ボタン（プレイ画面の 📋🔁🏁 など） */}
+  {/* 画面固有ボタン（プレイ画面の ⋯ / 🏁 など） */}
 </AppFooter>
 ```
 
@@ -119,6 +119,7 @@ import AppFooter from './components/AppFooter';
 | 項目 | 規定 |
 |------|------|
 | 本文テキスト | `font-size: 1rem` |
+| 本文文字色 | `#fff`（ダイアログ内本文は白で統一） |
 | 閉じるボタン（❎） | `font-size: 2rem`, `align-self: center`, `background: transparent`, `border: none` |
 | 適用対象 | 遊び方 / 設定 / 結果 ダイアログ |
 
@@ -148,3 +149,4 @@ import AppFooter from './components/AppFooter';
 | 2026-06-03 | 4.3 にコンテナ `padding`/`gap` 規定を追加（白線位置崩れの根本解消） |
 | 2026-06-03 | 4.4 ダイアログ内コンテンツ・閉じるボタン規定を追加 |
 | 2026-06-03 | 4.5 ダイアログコンポーネント分割規定を追加（結果ダイアログを個別ファイル化） |
+| 2026-06-07 | 4.4 にダイアログ本文文字色 `#fff` 統一規定を追加 |

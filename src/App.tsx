@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
 import AppFooter from './components/AppFooter';
+import ConfirmModal from './components/ConfirmModal';
+import PlayMenuModal from './components/PlayMenuModal';
 import ResultModal from './components/ResultModal';
 import RulesModal from './components/RulesModal';
 import SettingsModal from './components/SettingsModal';
@@ -15,6 +17,7 @@ const basePoint = 10;
 const APP_VERSION = '1.1.1';
 
 type AppScreen = 'title' | 'play';
+type ConfirmAction = 'none' | 'backToTitle' | 'retry';
 
 interface Card {
   id: number,
@@ -53,6 +56,11 @@ function App() {
   const [isFinished, setIsFinished] = useState(false);
   const [isViewResult, setIsViewResult] = useState(false);
   const [animateResult, setAnimateResult] = useState(false);
+  const [isViewMenu, setIsViewMenu] = useState(false);
+  const [isViewConfirm, setIsViewConfirm] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>('none');
+  const [returnMenuOnRulesClose, setReturnMenuOnRulesClose] = useState(false);
+  const [returnMenuOnSettingsClose, setReturnMenuOnSettingsClose] = useState(false);
   const [isViewRules, setIsViewRules] = useState(false);
   const [appScreen, setAppScreen] = useState<AppScreen>('title');
   const [isViewSettings, setIsViewSettings] = useState(false);
@@ -151,24 +159,116 @@ function App() {
     setAnimateResult(false);
   }
 
+  const retryFromResult = () => {
+    closeResult();
+    setIsViewMenu(false);
+    setReturnMenuOnRulesClose(false);
+    setReturnMenuOnSettingsClose(false);
+    resetGame();
+  }
+
+  const backToTitleFromResult = () => {
+    closeResult();
+    backToTitleFromMenu();
+  }
+
   const openResult = () => {
     setIsViewResult(true)
   }
 
+  const openMenu = () => {
+    setIsViewMenu(true);
+  }
+
+  const closeMenu = () => {
+    setIsViewMenu(false);
+  }
+
+  const backToTitleFromMenu = () => {
+    setIsViewMenu(false);
+    setReturnMenuOnRulesClose(false);
+    setReturnMenuOnSettingsClose(false);
+    setIsViewResult(false);
+    setAnimateResult(false);
+    setIsViewRules(false);
+    setIsViewSettings(false);
+    setAppScreen('title');
+  }
+
+  const openConfirmFromMenu = (action: Exclude<ConfirmAction, 'none'>) => {
+    setIsViewMenu(false);
+    setConfirmAction(action);
+    setIsViewConfirm(true);
+  }
+
+  const confirmBackToTitleFromMenu = () => {
+    openConfirmFromMenu('backToTitle');
+  }
+
+  const openRulesFromMenu = () => {
+    setIsViewMenu(false);
+    setReturnMenuOnRulesClose(true);
+    setIsViewRules(true);
+  }
+
+  const openSettingsFromMenu = () => {
+    setIsViewMenu(false);
+    setReturnMenuOnSettingsClose(true);
+    setIsViewSettings(true);
+  }
+
+  const confirmRetryFromMenu = () => {
+    openConfirmFromMenu('retry');
+  }
+
+  const confirmOk = () => {
+    const action = confirmAction;
+    setIsViewConfirm(false);
+    setConfirmAction('none');
+    if (action === 'backToTitle') {
+      backToTitleFromMenu();
+      return;
+    }
+    if (action === 'retry') {
+      setIsViewMenu(false);
+      setReturnMenuOnRulesClose(false);
+      setReturnMenuOnSettingsClose(false);
+      resetGame();
+    }
+  }
+
+  const confirmCancel = () => {
+    setIsViewConfirm(false);
+    setConfirmAction('none');
+    if (appScreen === 'play') {
+      setIsViewMenu(true);
+    }
+  }
+
   const closeRules = () => {
-    setIsViewRules(false)
+    setIsViewRules(false);
+    if (appScreen === 'play' && returnMenuOnRulesClose) {
+      setReturnMenuOnRulesClose(false);
+      setIsViewMenu(true);
+    }
   }
 
   const openRules = () => {
+    setReturnMenuOnRulesClose(false);
     setIsViewRules(true)
   }
 
   const openSettings = () => {
+    setReturnMenuOnSettingsClose(false);
     setIsViewSettings(true);
   }
 
   const closeSettings = () => {
     setIsViewSettings(false);
+    if (appScreen === 'play' && returnMenuOnSettingsClose) {
+      setReturnMenuOnSettingsClose(false);
+      setIsViewMenu(true);
+    }
   }
 
   const startGame = () => {
@@ -242,8 +342,38 @@ function App() {
             <span className="countdown-text">{countdown}</span>
           </div>
         )}
-        <ResultModal isOpen={isViewResult} point={point} maxCombo={maxCombo} animate={animateResult} onClose={closeResult} />
+        <PlayMenuModal
+          isOpen={isViewMenu}
+          onClose={closeMenu}
+          onBackToTitle={confirmBackToTitleFromMenu}
+          onOpenHowTo={openRulesFromMenu}
+          onOpenSettings={openSettingsFromMenu}
+          onRetry={confirmRetryFromMenu}
+        />
+        <ConfirmModal
+          isOpen={isViewConfirm}
+          message="現在進行中のゲーム内容が失われます。"
+          onConfirm={confirmOk}
+          onCancel={confirmCancel}
+        />
+        <ResultModal
+          isOpen={isViewResult}
+          point={point}
+          maxCombo={maxCombo}
+          animate={animateResult}
+          onBackToTitle={backToTitleFromResult}
+          onRetry={retryFromResult}
+          onClose={closeResult}
+        />
         <RulesModal isOpen={isViewRules} onClose={closeRules} />
+        <SettingsModal
+          isOpen={isViewSettings}
+          soundEnabled={settings.soundEnabled}
+          volume={settings.volume}
+          onToggleSound={() => setSoundEnabled(!settings.soundEnabled)}
+          onVolumeChange={setVolume}
+          onClose={closeSettings}
+        />
       <header className="header">
         <h1>Match Monster</h1>
       </header>    
@@ -266,9 +396,8 @@ function App() {
           ))}
         </div>
         <AppFooter>
-            <button className="footer-button" onClick={openRules}>📋</button>
-          <button className="footer-button" onClick={resetGame}>🔁</button>
-            <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
+          <button className="footer-button footer-button--menu" onClick={openMenu} aria-label="メニューを開く">⋯</button>
+          <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
         </AppFooter>
       </div>
     </div>
