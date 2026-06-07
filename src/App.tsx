@@ -151,13 +151,11 @@ function App() {
         setPoint((prev) => prev + addingPoints); // ポイント加算
         setComboCount(newCombo);
         if(maxCombo < newCombo) setMaxCombo(newCombo);
-        setTimeout(() => {
-          const updated = [...cards];
-          updated[i1].matched = true;
-          updated[i2].matched = true;
-          setCards(updated);
-          setSelected([]);
-        }, 600);
+        const updated = [...newCards];
+        updated[i1] = { ...updated[i1], matched: true };
+        updated[i2] = { ...updated[i2], matched: true };
+        setCards(updated);
+        setSelected([]);
       } else {
         // 不一致→元に戻す
         setComboCount(0);
