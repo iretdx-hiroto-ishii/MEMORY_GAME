@@ -134,6 +134,18 @@ import AppFooter from './components/AppFooter';
 | スタイル | ダイアログ固有の CSS が必要な場合は同名 `.css` を作成 |
 | 共通スタイル | `App.css` の共通クラス（`.shadow-overlay`, `.dialog-title-box` 等）はそのまま使用 |
 
+### 4.6 Viewport / スクロール規定（Must）
+
+| 項目 | 規定 |
+|------|------|
+| 画面全体 | `100dvh` ベースで viewport 内に収める |
+| スクロール | `html`, `body`, `#root` の縦スクロールを原則禁止する |
+| 横スクロール | `overflow-x: hidden` を維持する |
+| ノッチ端末 | `env(safe-area-inset-top/bottom)` を考慮して余白を調整する |
+| 小さい端末 | `@media (max-height)` / `@media (max-width)` で見切れ防止の縮小調整を行う |
+
+プレイ画面・タイトル画面は、共通してこの規定に従う。
+
 ---
 
 ## 5. 変更履歴
@@ -150,3 +162,4 @@ import AppFooter from './components/AppFooter';
 | 2026-06-03 | 4.4 ダイアログ内コンテンツ・閉じるボタン規定を追加 |
 | 2026-06-03 | 4.5 ダイアログコンポーネント分割規定を追加（結果ダイアログを個別ファイル化） |
 | 2026-06-07 | 4.4 にダイアログ本文文字色 `#fff` 統一規定を追加 |
+| 2026-06-07 | 4.6 画面全体の `100dvh` 管理・スクロール禁止・safe-area 考慮を追加 |
