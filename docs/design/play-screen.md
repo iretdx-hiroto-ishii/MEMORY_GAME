@@ -51,6 +51,7 @@
 - カード裏: `/card-back.png`（`public`）。
 - 基本ポイント: `basePoint = 10`。コンボ加算: `basePoint + comboCount * basePoint`。
 - プレビュー: リセット／ゲーム開始後 **5秒間** 全カード表向き。
+- 画面全体は `100dvh` ベースで viewport 内に収め、スマホでページスクロールを発生させない。
 
 ### 3.3 画面遷移
 
@@ -293,6 +294,7 @@ flowchart TD
 | 項目 | 要件 |
 |------|------|
 | 画像プリロード | マウント時 `allIcons` を `Image()` で先読み（現行維持） |
+| viewport / スクロール | `html`, `body`, `#root` を含めて縦スクロールを発生させない。ルートは `100dvh` ベースで管理する |
 | レスポンシブ | `@media (max-width: 600px)` でカード・フッター調整（`App.css`） |
 | CSS 変数 | `--card-width: 70px`, `--card-height: 105px`（`index.css`） |
 | タップ | `-webkit-tap-highlight-color: transparent`（カード） |
@@ -354,3 +356,4 @@ interface Card {
 |------|----------|
 | 2026-05-31 | 現行 `App.tsx` 実装の文書化。MVP（タイトル連携・広告枠）差分を追記 |
 | 2026-06-07 | フッター操作を `⋯/🏁` に更新。メニュー/確認/設定モーダル、リザルト内 `リトライ/タイトルに戻る`、遊び方本文白文字を反映 |
+| 2026-06-07 | 100dvh ベースの viewport 固定・スクロール禁止・短い端末向け密度調整を反映 |
