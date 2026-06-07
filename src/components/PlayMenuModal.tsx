@@ -31,7 +31,7 @@ const PlayMenuModal = ({
         </div>
         <div className="menu-row">
           <button type="button" className="menu-action-button" onClick={onRetry}>
-            やり直し
+            リトライ
           </button>
           <button type="button" className="menu-action-button" onClick={onOpenHowTo}>
             遊び方

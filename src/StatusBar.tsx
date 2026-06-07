@@ -4,11 +4,11 @@ const StatusBar = ({ point, comboCount }: { point: number; comboCount: number })
     return (
         <div className="status-bar">
             <div className="status-row">
-                <span className="label">POINT :</span>
+                <span className="status-label">POINT :</span>
                 <div className="point-display">{point}</div>
             </div>
             <div className="status-row">
-                <span className="label">COMBO :</span>
+                <span className="status-label">COMBO :</span>
                 <div className="combo-display">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <div
