@@ -184,7 +184,7 @@ flowchart TD
 | 項目 | 仕様 |
 |------|------|
 | 表示条件 | `isViewSettings === true` |
-| 表示内容 | サウンドON/OFF / 効果音スライダー |
+| 表示内容 | サウンドON/OFF / 効果音スライダー（OFF時は `効果音` ラベルと音量表示をグレー化） |
 | 閉じ方 | ❎ または overlay 外タップ |
 
 ---
@@ -239,7 +239,7 @@ flowchart TD
 3. 2枚目: 同一 `icon` なら一致
    - ポイント: `basePoint + comboCount * basePoint` を加算
    - `comboCount++`、`maxCombo` 更新
-   - 600ms 後に `matched = true`
+  - 即時に `matched = true`、`selected` をクリア（次のカード操作を可能にする）
 4. 不一致: `comboCount = 0`、600ms 後に両方 `flipped = false`
 5. `selected` をクリア
 
@@ -289,6 +289,7 @@ flowchart TD
 | リセット中のカードタップ | 無視（`isResetting`） |
 | リセット連打 | 1回目のみ（`isResetting` ガード） |
 | めくり中に3枚目タップ | 無視（`selected.length === 2`） |
+| 一致直後の次カードタップ | 可能（`selected` を即時クリア） |
 | マッチ済みカードタップ | `disabled` + 早期 return |
 | 制限時間切れ後のカードタップ | 無視（`isTimeOver`） |
 | タイトルからスタート（新規） | `resetGame` と同シーケンスで開始 |
@@ -333,7 +334,7 @@ flowchart TD
 ### 現行機能（リグレッション）
 
 - [ ] AC-1: 4×4 の16枚カードが表示され、タップでめくれる
-- [ ] AC-2: 一致でポイント加算・コンボ増加、不一致でコンボリセット・裏返し
+- [ ] AC-2: 一致でポイント加算・コンボ増加し、待機なしで次のカードをめくれる。不一致ではコンボリセット後に裏返しへ戻る
 - [ ] AC-3: メニュー `リトライ`（確認OK）またはリザルト `リトライ` で `ready...` → 3,2,1 → 5秒プレビュー → プレイ可能になる
 - [ ] AC-4: 制限時間は 30 秒で、最初の有効なカードタップ時にカウントが開始される
 - [ ] AC-5: 残り 5 秒以下でタイマー表示が赤字になり、毎秒のカウントで発光・拡大エフェクトが再生される
@@ -370,7 +371,7 @@ flowchart TD
 | 現行ファイル | `src/App.tsx`（ロジック集約）, `src/StatusBar.tsx`, `src/App.css`, `src/status-bar.css`, `src/index.css` |
 | タイトル連携時の変更 | `App.tsx` に `appScreen` 分岐。初回 `useEffect` での暗黙スタートがあれば削除し、スタート時に `resetGame()` 呼び出し |
 | 分割推奨（任意） | `src/screens/PlayScreen.tsx` へ UI 移動。MVPでは `App.tsx` 内分岐でも可 |
-| 定数 | `basePoint = 10`、プレビュー `5000ms`、めくり確定 `600ms`、カウント `1000ms` |
+| 定数 | `basePoint = 10`、プレビュー `5000ms`、不一致戻し `600ms`、カウント `1000ms` |
 | 依存 | 追加パッケージなし |
 
 ### Card 型（参照）
@@ -399,3 +400,5 @@ interface Card {
 | 2026-06-07 | リザルトを「結果一覧」から「TOTAL SCORE を祝福する画面」へ再設計。TOTAL SCORE を中央の主役に変更 |
 | 2026-06-08 | クリア時補助メッセージを `Excellent!`/`Great!`/`Clear!` に変更。`HISPEED BONUS`（500/100/0）を導入し、`TOTAL = POINT + BONUS + HISPEED BONUS` へ更新 |
 | 2026-06-08 | 🏁 ボタンをタイムアップ後にも有効化。リザルトの `HISPEED BONUS` は獲得時のみ表示へ更新 |
+| 2026-06-08 | 一致したカードは即時に `matched` 扱いとし、次のカードを待機なしで操作可能に更新 |
+| 2026-06-08 | 設定モーダルでサウンド OFF 時、`効果音` ラベルと音量表示（数値・`%`）をグレー表示に更新 |

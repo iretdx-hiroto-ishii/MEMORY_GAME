@@ -40,7 +40,7 @@ const SettingsModal = ({
             {soundEnabled ? 'オン' : 'オフ'}
           </button>
         </div>
-        <div className="settings-modal__row settings-modal__row--slider">
+        <div className={`settings-modal__row settings-modal__row--slider ${!soundEnabled ? 'settings-modal__row--disabled' : ''}`}>
           <label htmlFor="settings-volume">効果音</label>
           <input
             id="settings-volume"

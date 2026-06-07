@@ -36,7 +36,7 @@ const TitleScreen = ({
             onClick={onOpenHowTo}
             aria-label="遊び方を見る"
           >
-            遊び方 📋
+            遊び方
           </button>
           <button
             type="button"
@@ -44,7 +44,7 @@ const TitleScreen = ({
             onClick={onOpenSettings}
             aria-label="設定を開く"
           >
-            設定 ⚙
+            設定
           </button>
           <button
             type="button"

@@ -97,6 +97,13 @@
   text-align: right;
 }
 
+.settings-modal__row--disabled label,
+.settings-modal__row--disabled .settings-modal__volume-value,
+.settings-modal__row--disabled .settings-modal__volume-number,
+.settings-modal__row--disabled .settings-modal__volume-unit {
+  color: #9a9a9a;
+}
+
 .settings-modal__toggle {
   padding: 8px 16px;
   border: 2px solid #b38600;
