@@ -14,10 +14,13 @@ import { useGameSettings } from './hooks/useGameSettings';
 const images = import.meta.glob('/src/assets/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
 const allIcons = Object.values(images).map((mod) => mod.default);
 const basePoint = 10;
+const timerInitialSeconds = 30;
 const APP_VERSION = '1.1.1';
 
 type AppScreen = 'title' | 'play';
 type ConfirmAction = 'none' | 'backToTitle' | 'retry';
+type ResultMessage = 'none' | 'excellent' | 'great' | 'clear' | 'timeUp';
+type PreResultCue = Exclude<ResultMessage, 'none'>;
 
 interface Card {
   id: number,
@@ -51,6 +54,12 @@ function App() {
   const [point, setPoint] = useState(0);
   const [comboCount, setComboCount] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(timerInitialSeconds);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isTimeOver, setIsTimeOver] = useState(false);
+  const [timeBonus, setTimeBonus] = useState(0);
+  const [hiSpeedBonus, setHiSpeedBonus] = useState(0);
+  const [preResultCue, setPreResultCue] = useState<ResultMessage>('none');
   const [isResetting, setIsResetting] = useState(false);
   const [countdown, setCountdown] = useState<number | string | null>(null);
   const [isFinished, setIsFinished] = useState(false);
@@ -71,9 +80,61 @@ function App() {
     setCards(shuffledCardsRef.current);
   }, []);
 
+  const showPreResultCue = (message: PreResultCue) => {
+    setPreResultCue(message);
+    window.setTimeout(() => {
+      setPreResultCue('none');
+      setAnimateResult(true);
+      setIsViewResult(true);
+    }, 1700);
+  };
+
+  const getClearCueAndHiSpeedBonus = (remainingSeconds: number) => {
+    const elapsedSeconds = timerInitialSeconds - remainingSeconds;
+    if (elapsedSeconds <= 10) {
+      return { cue: 'excellent' as const, bonus: 500 };
+    }
+    if (elapsedSeconds <= 20) {
+      return { cue: 'great' as const, bonus: 100 };
+    }
+    return { cue: 'clear' as const, bonus: 0 };
+  };
+
+  useEffect(() => {
+    if (!isTimerRunning || isFinished || isTimeOver) return;
+    if (timeLeft <= 0) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setTimeLeft((currentTime) => Math.max(currentTime - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isTimerRunning, isFinished, isTimeOver, timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft !== 0 || isFinished || isTimeOver) return;
+
+    setIsTimerRunning(false);
+    setIsTimeOver(true);
+    setTimeBonus(0);
+    setHiSpeedBonus(0);
+    showPreResultCue('timeUp');
+  }, [timeLeft, isFinished, isTimeOver]);
+
+  useEffect(() => {
+    if (isFinished || isTimeOver) {
+      setIsTimerRunning(false);
+    }
+  }, [isFinished, isTimeOver]);
+
   const flipCard = (index: number) => {
     if (isResetting) return; // リセット中は何もしない
     if (cards[index].flipped || cards[index].matched || selected.length === 2) return;
+    if (isTimeOver) return;
+
+    if (!isTimerRunning) {
+      setIsTimerRunning(true);
+    }
 
     const newCards = [...cards];
     newCards[index].flipped = true;
@@ -114,12 +175,24 @@ function App() {
   };
 
   const checkFinished = () => {
+    if (isFinished || isTimeOver) return;
     if (!cards.find(card => card.flipped == false)) {
+      if (timeLeft <= 0) {
+        setTimeBonus(0);
+        setHiSpeedBonus(0);
+        showPreResultCue('timeUp');
+        setIsTimerRunning(false);
+        setIsFinished(true);
+        return;
+      }
+
+      const earnedTimeBonus = timeLeft * 10;
+      const clearResult = getClearCueAndHiSpeedBonus(timeLeft);
+      setTimeBonus(earnedTimeBonus);
+      setHiSpeedBonus(clearResult.bonus);
+      showPreResultCue(clearResult.cue);
+      setIsTimerRunning(false);
       setIsFinished(true);
-      setTimeout(() => {
-        setAnimateResult(true);
-        setIsViewResult(true);
-      }, 1000)
     }
   }
 
@@ -127,6 +200,12 @@ function App() {
     if (isResetting) return; // リセット中は何もしない
     setCountdown('ready...');
     setIsResetting(true);
+    setTimeLeft(timerInitialSeconds);
+    setIsTimerRunning(false);
+    setIsTimeOver(false);
+    setTimeBonus(0);
+    setHiSpeedBonus(0);
+    setPreResultCue('none');
     resetParameter();
 
     shuffledCardsRef.current = createShuffledCards();
@@ -173,6 +252,7 @@ function App() {
   }
 
   const openResult = () => {
+    if (!isFinished && !isTimeOver) return;
     setIsViewResult(true)
   }
 
@@ -190,6 +270,12 @@ function App() {
     setReturnMenuOnSettingsClose(false);
     setIsViewResult(false);
     setAnimateResult(false);
+    setIsTimerRunning(false);
+    setIsTimeOver(false);
+    setTimeLeft(timerInitialSeconds);
+    setTimeBonus(0);
+    setHiSpeedBonus(0);
+    setPreResultCue('none');
     setIsViewRules(false);
     setIsViewSettings(false);
     setAppScreen('title');
@@ -342,6 +428,19 @@ function App() {
             <span className="countdown-text">{countdown}</span>
           </div>
         )}
+        {preResultCue !== 'none' && (
+          <div className="shadow-overlay time-result-cue-overlay">
+            <p className={preResultCue === 'timeUp' ? 'time-result-cue time-result-cue--danger' : 'time-result-cue'}>
+              {preResultCue === 'timeUp'
+                ? 'Time Up!'
+                : preResultCue === 'excellent'
+                  ? 'Excellent!'
+                  : preResultCue === 'great'
+                    ? 'Great!'
+                    : 'Clear!'}
+            </p>
+          </div>
+        )}
         <PlayMenuModal
           isOpen={isViewMenu}
           onClose={closeMenu}
@@ -360,6 +459,8 @@ function App() {
           isOpen={isViewResult}
           point={point}
           maxCombo={maxCombo}
+          timeBonus={timeBonus}
+          hiSpeedBonus={hiSpeedBonus}
           animate={animateResult}
           onBackToTitle={backToTitleFromResult}
           onRetry={retryFromResult}
@@ -376,14 +477,24 @@ function App() {
         />
       <header className="header">
         <h1>Match Monster</h1>
-      </header>    
+      </header>
+        <div className="timer-bar" aria-label="制限時間">
+          <span className="timer-bar__label">TIME</span>
+          <span
+            key={timeLeft}
+            className={timeLeft <= 5 ? 'timer-bar__value timer-bar__value--urgent' : 'timer-bar__value'}
+            aria-live="polite"
+          >
+            {timeLeft}
+          </span>
+        </div>
         <StatusBar point={point} comboCount={comboCount} />
         <div className="grid">
           {cards.map((card, i) => (
             <button
               key={card.id}
               onClick={() => flipCard(i)}
-              disabled={card.flipped || card.matched}
+              disabled={card.flipped || card.matched || isTimeOver}
               className="card"
             >
               <img src={card.icon} alt="monster" className="card-image" />
@@ -397,7 +508,7 @@ function App() {
         </div>
         <AppFooter>
           <button className="footer-button footer-button--menu" onClick={openMenu} aria-label="メニューを開く">⋯</button>
-          <button className={`footer-button ${isFinished ? "" : "disabled"}`} onClick={openResult}>🏁</button>
+          <button className={`footer-button ${(isFinished || isTimeOver) ? "" : "disabled"}`} onClick={openResult}>🏁</button>
         </AppFooter>
       </div>
     </div>

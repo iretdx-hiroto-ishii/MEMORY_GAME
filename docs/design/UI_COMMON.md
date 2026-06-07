@@ -110,7 +110,7 @@ import AppFooter from './components/AppFooter';
 | コンテナ内余白 | `padding: 18px`（タイトル帯とダイアログ枠の間の距離） |
 | コンテナ要素間隔 | `gap: 18px`（flex column の各要素間） |
 | タイトル帯 | `position: relative`, `padding: 10px 0`, `width: 100%` |
-| 上下白線 | 擬似要素で `top: 0` / `bottom: 0` に固定、`height: 2px`, `background: #fff` |
+| 上下白線 | 擬似要素で `top: 0` / `bottom: 0` に固定、`height: 2px`, `background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.95), rgba(255,255,255,0))` |
 | タイトルテキスト | `font-size: 1.6rem`, `letter-spacing: 2px`, `margin: 0` |
 | 適用対象 | 遊び方 / 設定 / 結果 ダイアログ |
 
@@ -163,3 +163,4 @@ import AppFooter from './components/AppFooter';
 | 2026-06-03 | 4.5 ダイアログコンポーネント分割規定を追加（結果ダイアログを個別ファイル化） |
 | 2026-06-07 | 4.4 にダイアログ本文文字色 `#fff` 統一規定を追加 |
 | 2026-06-07 | 4.6 画面全体の `100dvh` 管理・スクロール禁止・safe-area 考慮を追加 |
+| 2026-06-08 | 4.3 のタイトル上下線を、白色グラデーション（中央強調）仕様へ更新 |

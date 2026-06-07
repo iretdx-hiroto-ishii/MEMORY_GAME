@@ -17,6 +17,7 @@ const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
             <li>ゲーム開始後の５秒間は絵柄を覚えるチャンス！</li>
             <li>同じ絵柄をそろえてポイントゲット！</li>
             <li>連続で正解するとコンボボーナス加算！</li>
+            <li>制限時間は30秒！時間内にクリアするとタイムボーナス加算！</li>
           </ul>
         </div>
         <button className="close-button" onClick={onClose} aria-label="遊び方を閉じる">
