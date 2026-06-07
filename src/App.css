@@ -49,6 +49,10 @@
   cursor: pointer;
 }
 
+.footer-button--menu {
+  line-height: 1;
+}
+
 .footer-button:hover {
   transform: scale(1.05);
   color: black;
@@ -152,21 +156,120 @@
   z-index: 9999;
 }
 
+.menu-overlay {
+  width: min(70vw, 420px);
+  height: fit-content;
+  max-height: 100%;
+  background-color: rgba(57, 0, 77, 0.95);
+  border: 5px solid #B38600;
+  box-shadow: 0 0 7px 5px #ffffff;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  overflow: auto;
+  z-index: 9999;
+}
+
+.menu-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-action-button {
+  padding: 8px 16px;
+  border: 2px solid #b38600;
+  border-radius: 999px;
+  background-color: #1e1e1e;
+  color: #fff;
+  font-size: 10pt;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.confirm-overlay {
+  width: min(70vw, 420px);
+  height: fit-content;
+  max-height: 100%;
+  background-color: rgba(57, 0, 77, 0.95);
+  border: 5px solid #B38600;
+  box-shadow: 0 0 7px 5px #ffffff;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  overflow: auto;
+  z-index: 9999;
+}
+
+.confirm-message {
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  margin: 0;
+}
+
+.confirm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+.confirm-action-button {
+  justify-self: center;
+  width: 132px;
+} 
+
 .result-row {
   display: flex;
-  align-items: center;
   flex-direction: column;
+  gap: 10px;
   margin: 5%;
+  width: 90%;
 }
 
 .result-text {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 12px;
+  width: 100%;
   color: white;
   font-size: 1rem;
-  text-align: center;
+}
+
+.result-label {
+  color: white;
+  text-align: left;
+}
+
+.result-value {
+  color: white;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .result-text--animate {
-  animation: pop 1s ease-in-out;
+  opacity: 0;
+  animation: pop 0.45s ease-out forwards;
+}
+
+.result-text--animate-first {
+  animation-delay: 0s;
+}
+
+.result-text--animate-second {
+  animation-delay: 0.35s;
 }
 
 .record-box {
@@ -179,6 +282,7 @@
   height: fit-content;
   max-height: 100%;
   background-color: rgba(57, 0, 77, 0.95);
+  color: #fff;
   border: 5px solid #B38600;
   box-shadow: 0 0 7px 5px #ffffff;   
   border-radius: 5px;
