@@ -11,7 +11,7 @@
 | 項目 | 内容 |
 |------|------|
 | 表記 | `© {年} {運営者名}`（例: `© 2026 A型システム`） |
-| 正本 | [`public/branding.json`](../../public/branding.json) |
+| 正本 | [`src/assets/branding.json`](../../src/assets/branding.json) |
 | React | `src/constants/branding.ts` が JSON を import |
 | 静的 HTML | [`public/shared/branding-footer.js`](../../public/shared/branding-footer.js) が JSON を fetch |
 
@@ -22,7 +22,7 @@
 | React 画面（プレイ・タイトル等） | [`AppFooter`](../src/components/AppFooter.tsx) を画面下部に配置 |
 | 静的 HTML（プライバシーポリシー等） | `data-app-copyright` + `branding-footer.js` + `app-footer.css` |
 
-文言を変えるときは **`public/branding.json` のみ**編集する。
+文言を変えるときは **`src/assets/branding.json` のみ**編集する。
 
 新規 React 画面は **必ず `AppFooter` を含める**。コピーライトを画面ごとに直書きしない。
 
@@ -43,7 +43,7 @@
 | `src/components/AppFooter.tsx` | フッターコンポーネント |
 | `src/components/app-footer.css` | React 用スタイル |
 | `src/constants/branding.ts` | JSON の re-export・`getCopyrightText()` |
-| `public/branding.json` | 運営者名・年の **正本** |
+| `src/assets/branding.json` | 運営者名・年の **正本** |
 
 ### 使用例
 
