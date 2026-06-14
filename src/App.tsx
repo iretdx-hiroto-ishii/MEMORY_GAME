@@ -10,8 +10,9 @@ import SettingsModal from './components/SettingsModal';
 import TopAdBanner from './components/TopAdBanner';
 import TitleScreen from './screens/TitleScreen';
 import { useGameSettings } from './hooks/useGameSettings';
+import cardBackImage from './assets/images/card-back.png';
 
-const images = import.meta.glob('/src/assets/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
+const images = import.meta.glob('/src/assets/images/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
 const allIcons = Object.values(images).map((mod) => mod.default);
 const basePoint = 10;
 const timerInitialSeconds = 30;
@@ -497,7 +498,7 @@ function App() {
             >
               <img src={card.icon} alt="monster" className="card-image" />
               <img
-                src="/card-back.png"
+                src={cardBackImage}
                 alt="back"
                 className={`card-back-image ${card.flipped ? "hidden" : ""}`}
               />

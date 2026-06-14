@@ -48,7 +48,7 @@
 ### 3.2 前提・制約
 
 - カード絵柄: `src/assets/monsters/*.PNG` からランダム 8 種 × 2 枚（計 16 枚）。
-- カード裏: `/card-back.png`（`public`）。
+- カード裏: `src/assets/images/card-back.png`。
 - 基本ポイント: `basePoint = 10`。コンボ加算: `basePoint + comboCount * basePoint`。
 - プレビュー: リセット／ゲーム開始後 **5秒間** 全カード表向き。
 - 画面全体は `100dvh` ベースで viewport 内に収め、スマホでページスクロールを発生させない。
