@@ -3,11 +3,17 @@ import './App.css';
 import StatusBar from "./StatusBar";
 import AppFooter from './components/AppFooter';
 import ConfirmModal from './components/ConfirmModal';
+import PlayRecordModal from './components/PlayRecordModal';
 import PlayMenuModal from './components/PlayMenuModal';
 import ResultModal from './components/ResultModal';
 import RulesModal from './components/RulesModal';
 import SettingsModal from './components/SettingsModal';
 import TopAdBanner from './components/TopAdBanner';
+import {
+  loadPlayRecords,
+  savePlayRecords,
+  updatePlayRecords,
+} from './constants/playRecords';
 import TitleScreen from './screens/TitleScreen';
 import { useGameSettings } from './hooks/useGameSettings';
 import cardBackImage from './assets/images/card-back.png';
@@ -74,7 +80,10 @@ function App() {
   const [isViewRules, setIsViewRules] = useState(false);
   const [appScreen, setAppScreen] = useState<AppScreen>('title');
   const [isViewSettings, setIsViewSettings] = useState(false);
+  const [isViewPlayRecord, setIsViewPlayRecord] = useState(false);
   const [isStartingGame, setIsStartingGame] = useState(false);
+  const [playRecords, setPlayRecords] = useState(loadPlayRecords);
+  const hasRecordedCurrentGameRef = useRef(false);
   const { settings, setSoundEnabled, setVolume } = useGameSettings();
 
   useEffect(() => {
@@ -127,6 +136,27 @@ function App() {
       setIsTimerRunning(false);
     }
   }, [isFinished, isTimeOver]);
+
+  useEffect(() => {
+    const hasGameEnded = isFinished || isTimeOver;
+    if (!hasGameEnded || hasRecordedCurrentGameRef.current) return;
+
+    const totalScore = point + timeBonus + hiSpeedBonus;
+    const elapsedSec = Math.max(timerInitialSeconds - timeLeft, 0);
+    const cleared = isFinished && !isTimeOver;
+
+    setPlayRecords((current) => {
+      const next = updatePlayRecords(current, {
+        totalScore,
+        elapsedSec,
+        cleared,
+      });
+      savePlayRecords(next);
+      return next;
+    });
+
+    hasRecordedCurrentGameRef.current = true;
+  }, [isFinished, isTimeOver, point, timeBonus, hiSpeedBonus, timeLeft]);
 
   const flipCard = (index: number) => {
     if (isResetting) return; // リセット中は何もしない
@@ -197,6 +227,7 @@ function App() {
 
   const resetGame = () => {
     if (isResetting) return; // リセット中は何もしない
+    hasRecordedCurrentGameRef.current = false;
     setCountdown('ready...');
     setIsResetting(true);
     setTimeLeft(timerInitialSeconds);
@@ -348,6 +379,16 @@ function App() {
     setIsViewSettings(true);
   }
 
+  const openPlayRecord = () => {
+    setIsViewRules(false);
+    setIsViewSettings(false);
+    setIsViewPlayRecord(true);
+  }
+
+  const closePlayRecord = () => {
+    setIsViewPlayRecord(false);
+  }
+
   const closeSettings = () => {
     setIsViewSettings(false);
     if (appScreen === 'play' && returnMenuOnSettingsClose) {
@@ -399,6 +440,7 @@ function App() {
             onStart={startGame}
             onOpenSettings={openSettings}
             onOpenHowTo={openRules}
+            onOpenPlayRecord={openPlayRecord}
             isStartDisabled={isStartingGame}
             version={APP_VERSION}
           />
@@ -411,6 +453,11 @@ function App() {
           onToggleSound={() => setSoundEnabled(!settings.soundEnabled)}
           onVolumeChange={setVolume}
           onClose={closeSettings}
+        />
+        <PlayRecordModal
+          isOpen={isViewPlayRecord}
+          records={playRecords}
+          onClose={closePlayRecord}
         />
       </div>
     );

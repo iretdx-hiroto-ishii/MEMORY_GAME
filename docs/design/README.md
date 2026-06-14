@@ -9,4 +9,5 @@ UI 共通（フッター・コピーライト）は **[`UI_COMMON.md`](UI_COMMON
 | [`UI_COMMON.md`](UI_COMMON.md) | 全画面共通 UI |
 | [`title-screen.md`](title-screen.md) | タイトル |
 | [`play-screen.md`](play-screen.md) | プレイ |
+| [`play-record-screen.md`](play-record-screen.md) | プレイ記録 |
 | [`_template.md`](_template.md) | 新規画面用テンプレート |

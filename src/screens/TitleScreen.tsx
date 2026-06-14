@@ -5,6 +5,7 @@ type TitleScreenProps = {
   onStart: () => void;
   onOpenSettings: () => void;
   onOpenHowTo: () => void;
+  onOpenPlayRecord: () => void;
   isStartDisabled: boolean;
   version: string;
 };
@@ -13,6 +14,7 @@ const TitleScreen = ({
   onStart,
   onOpenSettings,
   onOpenHowTo,
+  onOpenPlayRecord,
   isStartDisabled,
   version,
 }: TitleScreenProps) => {
@@ -37,6 +39,14 @@ const TitleScreen = ({
             aria-label="遊び方を見る"
           >
             遊び方
+          </button>
+          <button
+            type="button"
+            className="title-screen__button title-screen__button--secondary"
+            onClick={onOpenPlayRecord}
+            aria-label="プレイ記録を見る"
+          >
+            プレイ記録
           </button>
           <button
             type="button"
