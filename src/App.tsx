@@ -360,12 +360,9 @@ function App() {
     if (isStartingGame) return;
     setIsStartingGame(true);
     setIsViewSettings(false);
+    resetGame();
     setAppScreen('play');
-
-    window.setTimeout(() => {
-      resetGame();
-      setIsStartingGame(false);
-    }, 0);
+    setIsStartingGame(false);
   }
 
   const resetParameter = () => {
