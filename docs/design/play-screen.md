@@ -33,7 +33,7 @@
 | 広告枠の有無 | **あり（推奨）** — フッター下 or 画面最下部にバナー枠 |
 | 推奨広告種別 | **バナー**（プレイ中は操作領域と分離） / **インタースティシャル**はリザルト閉じた後（将来・別設計） |
 | 表示タイミング | プレイ中はカードグリッドを阻害しない位置。リザルト表示中は広告非表示 or リザルト下 |
-| UX上の注意 | カード（4×4）・フッターボタン（⋯🏁）と広告を重ねない |
+| UX上の注意 | カード（4×4）・フッターボタン（メニュー / 結果）と広告を重ねない |
 
 ---
 
@@ -80,12 +80,12 @@ flowchart TD
 | タイトル画面 | スタート | プレイ画面 + `resetGame` シーケンス |
 | プレイ画面 | メニュー「リトライ」→確認OK | 同一画面内でカウントダウン→プレビュー→再プレイ |
 | プレイ画面 | 全カードクリア | リザルト overlay 自動表示（1秒後） |
-| プレイ画面 | 🏁（クリア後またはタイムアップ後に有効） | リザルト overlay 手動表示 |
-| プレイ画面 | ⋯ | メニュー overlay |
+| プレイ画面 | 結果ボタン（`SquareStar`、クリア後またはタイムアップ後に有効） | リザルト overlay 手動表示 |
+| プレイ画面 | メニューボタン（`SquareMenu`） | メニュー overlay |
 | メニュー overlay | 遊び方 / 設定 | 各 overlay を表示 |
 | メニュー overlay | タイトルに戻る / リトライ | 確認 overlay を表示 |
 | リザルト overlay | タイトルに戻る / リトライ | タイトル遷移 or 再プレイ |
-| overlay | ❎ | プレイ画面（overlay 閉じる） |
+| overlay | 閉じる（`CircleX`） | プレイ画面（overlay 閉じる） |
 
 ---
 
@@ -109,7 +109,7 @@ flowchart TD
 │  │  │  │  │  │                  │
 │  └──┴──┴──┴──┘                  │
 ├─────────────────────────────────┤
-│           ⋯    🏁                │  ← footer
+│     [≡]    [★]                 │  ← footer（Lucide: SquareMenu / SquareStar）
 ├─────────────────────────────────┤
 │  [ 広告バナー枠（予約） ]          │
 └─────────────────────────────────┘
@@ -126,8 +126,8 @@ flowchart TD
 | `card-grid` | `div.grid` | 16枚カード | カードタップでめくる | `App.tsx` |
 | `card` | `button.card` | モンスター絵 + 裏面 | `flipCard(i)` | `App.tsx` |
 | `timer-bar` | テキスト | TIME / 残り秒（大きめ表示） | 最初のカードタップで開始（ヘッダー直下） | `App.tsx` |
-| `btn-menu` | フッター | ⋯ | `openMenu` | `App.tsx` |
-| `btn-result` | フッター | 🏁 | `openResult`（`isFinished` または `isTimeOver` 時に有効） | `App.tsx` |
+| `btn-menu` | フッター | `SquareMenu`（Lucide） | `openMenu` | `App.tsx` |
+| `btn-result` | フッター | `SquareStar`（Lucide） | `openResult`（`isFinished` または `isTimeOver` 時に有効） | `App.tsx` |
 | `app-footer` | 共通 | コピーライト | なし | `AppFooter.tsx` |
 | `ad-banner-slot` | コンテナ | （未実装・MVP追加推奨） | なし | 新規 |
 
@@ -146,20 +146,20 @@ flowchart TD
 
 | 項目 | 仕様 |
 |------|------|
-| 表示条件 | `isViewResult === true`（クリア後自動 or 🏁） |
+| 表示条件 | `isViewResult === true`（クリア後自動 or 結果ボタン） |
 | 表示内容 | 上段に `MAX COMBO` / `POINT` / `BONUS`（条件で `HISPEED BONUS` 追加）の要約表示、中央に大きな `TOTAL SCORE` と合計値、下段にアクションボタン |
 | 補助メッセージ | クリア時 `Excellent!` / `Great!` / `Clear!`、タイムアップ時 `Time Up!` |
 | 操作 | `リトライ` / `タイトルに戻る` ボタンを表示 |
-| 閉じ方 | ❎ → `closeResult` |
+| 閉じ方 | `CircleX` → `closeResult` |
 
 #### メニュー（`menu-overlay`）
 
 | 項目 | 仕様 |
 |------|------|
-| 表示条件 | `isViewMenu === true`（フッター ⋯） |
+| 表示条件 | `isViewMenu === true`（フッター `SquareMenu`） |
 | 項目順 | `リトライ` → `遊び方` → `設定` → `タイトルに戻る` |
 | 操作 | 遊び方/設定を開く、リトライ/タイトル戻りは確認ダイアログを挟む |
-| 閉じ方 | ❎ または overlay 外タップ |
+| 閉じ方 | `CircleX` または overlay 外タップ |
 
 #### 確認（`confirm-overlay`）
 
@@ -177,15 +177,15 @@ flowchart TD
 | 表示条件 | `isViewRules === true` |
 | 表示内容 | 5秒プレビュー / ペア / コンボ / 制限時間30秒 / 時間内クリアでタイムボーナス |
 | 文字色 | 本文を含めて白（`#fff`） |
-| 閉じ方 | ❎ → `closeRules` |
+| 閉じ方 | `CircleX` → `closeRules` |
 
 #### 設定（`settings-overlay`）
 
 | 項目 | 仕様 |
 |------|------|
 | 表示条件 | `isViewSettings === true` |
-| 表示内容 | サウンドON/OFF / 効果音スライダー（OFF時は `効果音` ラベルと音量表示をグレー化） |
-| 閉じ方 | ❎ または overlay 外タップ |
+| 表示内容 | サウンド ON/OFF / 効果音スライダー / BGM スライダー（OFF 時はラベル・数値をグレー化） |
+| 閉じ方 | `CircleX` または overlay 外タップ |
 
 ---
 
@@ -273,7 +273,7 @@ flowchart TD
 
 > **既知の注意:** 不一致ペアは一時的に両方 `flipped` になるため、理論上クリア前に誤検知する可能性がある。MVP後 Should で「全 `matched`」判定へ変更推奨。
 
-#### フッター 🏁
+#### フッター結果ボタン
 
 - `isFinished === false` かつ `isTimeOver === false` のとき `disabled` クラス（操作不可）
 
@@ -303,16 +303,13 @@ flowchart TD
 | カード配置 | メモリ（`shuffledCardsRef`） | 現状維持 |
 | スコア・コンボ | メモリ（React state） | 現状維持 |
 | ベストスコア | — | ❌ Won't |
-| ゲーム設定（音量） | `localStorage`（タイトル画面で管理） | プレイ画面では読み取りのみ（将来 BGM 連携） |
+| ゲーム設定 | `localStorage` `match-monster-settings` | タイトル・プレイ共通（`useGameSettings`） |
 
 ---
 
 ## 7. 音声・設定
 
-| 項目 | 仕様 | MVP |
-|------|------|-----|
-| BGM / SE | 未実装 | プレイ画面からは設定不可（タイトルのみ） |
-| 将来 | `useGameSettings` の音量を `<audio>` に反映 | 別タスク |
+[`sounds.md`](sounds.md) を正本とする。BGM ループ再生・効果音・設定モーダル（タイトルと共通）の詳細はそちらに記載。
 
 ---
 
@@ -343,11 +340,11 @@ flowchart TD
 - [ ] AC-8: タイムアップ前にクリアした場合、`remainingTime * 10` が BONUS に反映される
 - [ ] AC-9: `TOTAL` は常に `POINT + BONUS + HISPEED BONUS` になる
 - [ ] AC-10: 0 秒到達時は `Time Up!` が表示され、BONUS は 0 で表示される
-- [ ] AC-11: ⋯ でメニュー overlay が開き、`リトライ / 遊び方 / 設定 / タイトルに戻る` が表示される
+- [ ] AC-11: メニューボタンでメニュー overlay が開き、`リトライ / 遊び方 / 設定 / タイトルに戻る` が表示される
 - [ ] AC-12: メニューの `リトライ` と `タイトルに戻る` は確認 overlay を経由して実行される
 - [ ] AC-13: リザルト overlay に `リトライ` / `タイトルに戻る` ボタンが表示され、各動作が実行される
 - [ ] AC-14: 遊び方ダイアログ本文が白文字で表示される
-- [ ] AC-15: クリア前かつタイムアップ前は 🏁 が無効、クリア後またはタイムアップ後は有効
+- [ ] AC-15: クリア前かつタイムアップ前は結果ボタンが無効、クリア後またはタイムアップ後は有効
 - [ ] AC-16: クリア時に経過時間に応じて `Excellent!` / `Great!` / `Clear!` が表示される
 - [ ] AC-17: `Excellent!` は `HISPEED BONUS = 500`、`Great!` は `HISPEED BONUS = 100`、`Clear!` は `HISPEED BONUS = 0`
 - [ ] AC-18: `HISPEED BONUS` は獲得時（0より大きい）にのみ表示される
@@ -372,7 +369,7 @@ flowchart TD
 | タイトル連携時の変更 | `App.tsx` に `appScreen` 分岐。初回 `useEffect` での暗黙スタートがあれば削除し、スタート時に `resetGame()` 呼び出し |
 | 分割推奨（任意） | `src/screens/PlayScreen.tsx` へ UI 移動。MVPでは `App.tsx` 内分岐でも可 |
 | 定数 | `basePoint = 10`、プレビュー `5000ms`、不一致戻し `600ms`、カウント `1000ms` |
-| 依存 | 追加パッケージなし |
+| 依存 | `lucide-react`（フッター・モーダルアイコン） |
 
 ### Card 型（参照）
 
@@ -402,3 +399,4 @@ interface Card {
 | 2026-06-08 | 🏁 ボタンをタイムアップ後にも有効化。リザルトの `HISPEED BONUS` は獲得時のみ表示へ更新 |
 | 2026-06-08 | 一致したカードは即時に `matched` 扱いとし、次のカードを待機なしで操作可能に更新 |
 | 2026-06-08 | 設定モーダルでサウンド OFF 時、`効果音` ラベルと音量表示（数値・`%`）をグレー表示に更新 |
+| 2026-06-20 | BGM・効果音実装、`sounds.md` 参照。フッター・閉じるボタンを Lucide アイコンに更新 |

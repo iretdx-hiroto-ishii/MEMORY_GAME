@@ -1,7 +1,6 @@
 /**
  * 効果音・BGM の再生管理。
- * 効果音: docs/design/sound-effects.md
- * BGM: docs/design/bgm.md
+ * 効果音・BGM: docs/design/sounds.md
  *
  * 音量は Web Audio API の GainNode で制御する（iOS では HTMLAudioElement.volume が無効なため）。
  */
