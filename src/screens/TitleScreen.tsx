@@ -6,6 +6,7 @@ type TitleScreenProps = {
   onOpenSettings: () => void;
   onOpenHowTo: () => void;
   onOpenPlayRecord: () => void;
+  onOpenPrivacyPolicy: () => void;
   isStartDisabled: boolean;
   version: string;
 };
@@ -15,6 +16,7 @@ const TitleScreen = ({
   onOpenSettings,
   onOpenHowTo,
   onOpenPlayRecord,
+  onOpenPrivacyPolicy,
   isStartDisabled,
   version,
 }: TitleScreenProps) => {
@@ -59,7 +61,7 @@ const TitleScreen = ({
           <button
             type="button"
             className="title-screen__button title-screen__button--secondary title-screen__button--policy"
-            onClick={() => window.location.assign('/privacy-policy.html')}
+            onClick={onOpenPrivacyPolicy}
             aria-label="プライバシーポリシーを開く"
           >
             プライバシーポリシー

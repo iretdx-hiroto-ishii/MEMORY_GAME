@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 type GameSettings = {
   soundEnabled: boolean;
   volume: number;
+  bgmVolume: number;
 };
 
 const STORAGE_KEY = 'match-monster-settings';
@@ -10,6 +11,7 @@ const STORAGE_KEY = 'match-monster-settings';
 const defaultSettings: GameSettings = {
   soundEnabled: true,
   volume: 70,
+  bgmVolume: 70,
 };
 
 const clampVolume = (volume: number) => Math.min(100, Math.max(0, volume));
@@ -26,6 +28,10 @@ const loadSettings = (): GameSettings => {
         typeof parsed.volume === 'number'
           ? clampVolume(parsed.volume)
           : defaultSettings.volume,
+      bgmVolume:
+        typeof parsed.bgmVolume === 'number'
+          ? clampVolume(parsed.bgmVolume)
+          : defaultSettings.bgmVolume,
     };
   } catch {
     return defaultSettings;
@@ -51,9 +57,14 @@ export const useGameSettings = () => {
     setSettings((prev) => ({ ...prev, volume: clampVolume(volume) }));
   };
 
+  const setBgmVolume = (bgmVolume: number) => {
+    setSettings((prev) => ({ ...prev, bgmVolume: clampVolume(bgmVolume) }));
+  };
+
   return {
     settings,
     setSoundEnabled,
     setVolume,
+    setBgmVolume,
   };
 };

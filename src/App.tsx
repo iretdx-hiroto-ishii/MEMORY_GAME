@@ -16,6 +16,7 @@ import {
 } from './constants/playRecords';
 import TitleScreen from './screens/TitleScreen';
 import { useGameSettings } from './hooks/useGameSettings';
+import { audioService } from './services/audioService';
 import cardBackImage from './assets/images/card-back.png';
 
 const images = import.meta.glob('/src/assets/images/monsters/*.PNG', { eager: true }) as Record<string, { default: string }>;
@@ -84,18 +85,43 @@ function App() {
   const [isStartingGame, setIsStartingGame] = useState(false);
   const [playRecords, setPlayRecords] = useState(loadPlayRecords);
   const hasRecordedCurrentGameRef = useRef(false);
-  const { settings, setSoundEnabled, setVolume } = useGameSettings();
+  const hasPlayedResultSoundRef = useRef(false);
+  const { settings, setSoundEnabled, setVolume, setBgmVolume } = useGameSettings();
+
+  useEffect(() => {
+    audioService.preload();
+  }, []);
+
+  useEffect(() => {
+    audioService.setBgmActive(true);
+    return () => {
+      audioService.setBgmActive(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    audioService.configure({
+      soundEnabled: settings.soundEnabled,
+      volume: settings.volume,
+      bgmVolume: settings.bgmVolume,
+    });
+  }, [settings.soundEnabled, settings.volume, settings.bgmVolume]);
 
   useEffect(() => {
     setCards(shuffledCardsRef.current);
   }, []);
 
   const showPreResultCue = (message: PreResultCue) => {
+    audioService.play('finish');
     setPreResultCue(message);
     window.setTimeout(() => {
       setPreResultCue('none');
       setAnimateResult(true);
       setIsViewResult(true);
+      if (!hasPlayedResultSoundRef.current) {
+        audioService.play('result');
+        hasPlayedResultSoundRef.current = true;
+      }
     }, 1700);
   };
 
@@ -120,6 +146,13 @@ function App() {
 
     return () => window.clearTimeout(timeoutId);
   }, [isTimerRunning, isFinished, isTimeOver, timeLeft]);
+
+  useEffect(() => {
+    if (!isTimerRunning || isFinished || isTimeOver) return;
+    if (timeLeft >= 1 && timeLeft <= 5) {
+      audioService.play('count');
+    }
+  }, [timeLeft, isTimerRunning, isFinished, isTimeOver]);
 
   useEffect(() => {
     if (timeLeft !== 0 || isFinished || isTimeOver) return;
@@ -173,9 +206,14 @@ function App() {
     const newSelected = [...selected, index];
     setSelected(newSelected);
 
+    if (newSelected.length === 1) {
+      audioService.play('flip');
+    }
+
     if (newSelected.length === 2) {
       const [i1, i2] = newSelected;
       if (cards[i1].icon === cards[i2].icon) {
+        audioService.play('success');
         // 一致
         const addingPoints = basePoint + comboCount * basePoint;
         const newCombo = comboCount + 1;
@@ -188,6 +226,7 @@ function App() {
         setCards(updated);
         setSelected([]);
       } else {
+        audioService.play('miss');
         // 不一致→元に戻す
         setComboCount(0);
         setTimeout(() => {
@@ -227,7 +266,9 @@ function App() {
 
   const resetGame = () => {
     if (isResetting) return; // リセット中は何もしない
+    audioService.play('start');
     hasRecordedCurrentGameRef.current = false;
+    hasPlayedResultSoundRef.current = false;
     setCountdown('ready...');
     setIsResetting(true);
     setTimeLeft(timerInitialSeconds);
@@ -263,13 +304,18 @@ function App() {
     }, 1000);
   };
 
-  const closeResult = () => {
+  const dismissResult = () => {
     setIsViewResult(false);
     setAnimateResult(false);
+  };
+
+  const closeResult = () => {
+    audioService.play('close');
+    dismissResult();
   }
 
   const retryFromResult = () => {
-    closeResult();
+    dismissResult();
     setIsViewMenu(false);
     setReturnMenuOnRulesClose(false);
     setReturnMenuOnSettingsClose(false);
@@ -277,20 +323,24 @@ function App() {
   }
 
   const backToTitleFromResult = () => {
-    closeResult();
+    audioService.play('ok');
+    dismissResult();
     backToTitleFromMenu();
   }
 
   const openResult = () => {
     if (!isFinished && !isTimeOver) return;
+    audioService.play('ok');
     setIsViewResult(true)
   }
 
   const openMenu = () => {
+    audioService.play('ok');
     setIsViewMenu(true);
   }
 
   const closeMenu = () => {
+    audioService.play('close');
     setIsViewMenu(false);
   }
 
@@ -312,6 +362,7 @@ function App() {
   }
 
   const openConfirmFromMenu = (action: Exclude<ConfirmAction, 'none'>) => {
+    audioService.play('ok');
     setIsViewMenu(false);
     setConfirmAction(action);
     setIsViewConfirm(true);
@@ -322,12 +373,14 @@ function App() {
   }
 
   const openRulesFromMenu = () => {
+    audioService.play('ok');
     setIsViewMenu(false);
     setReturnMenuOnRulesClose(true);
     setIsViewRules(true);
   }
 
   const openSettingsFromMenu = () => {
+    audioService.play('ok');
     setIsViewMenu(false);
     setReturnMenuOnSettingsClose(true);
     setIsViewSettings(true);
@@ -342,6 +395,7 @@ function App() {
     setIsViewConfirm(false);
     setConfirmAction('none');
     if (action === 'backToTitle') {
+      audioService.play('ok');
       backToTitleFromMenu();
       return;
     }
@@ -354,6 +408,7 @@ function App() {
   }
 
   const confirmCancel = () => {
+    audioService.play('ok');
     setIsViewConfirm(false);
     setConfirmAction('none');
     if (appScreen === 'play') {
@@ -362,6 +417,7 @@ function App() {
   }
 
   const closeRules = () => {
+    audioService.play('close');
     setIsViewRules(false);
     if (appScreen === 'play' && returnMenuOnRulesClose) {
       setReturnMenuOnRulesClose(false);
@@ -370,31 +426,83 @@ function App() {
   }
 
   const openRules = () => {
+    audioService.play('ok');
     setReturnMenuOnRulesClose(false);
     setIsViewRules(true)
   }
 
   const openSettings = () => {
+    audioService.play('ok');
     setReturnMenuOnSettingsClose(false);
     setIsViewSettings(true);
   }
 
   const openPlayRecord = () => {
+    audioService.play('ok');
     setIsViewRules(false);
     setIsViewSettings(false);
     setIsViewPlayRecord(true);
   }
 
   const closePlayRecord = () => {
+    audioService.play('close');
     setIsViewPlayRecord(false);
   }
 
   const closeSettings = () => {
+    audioService.play('close');
     setIsViewSettings(false);
     if (appScreen === 'play' && returnMenuOnSettingsClose) {
       setReturnMenuOnSettingsClose(false);
       setIsViewMenu(true);
     }
+  }
+
+  const toggleSound = () => {
+    if (settings.soundEnabled) {
+      setSoundEnabled(false);
+      audioService.configure({
+        soundEnabled: false,
+        volume: settings.volume,
+        bgmVolume: settings.bgmVolume,
+      });
+      return;
+    }
+
+    setSoundEnabled(true);
+    audioService.configure({
+      soundEnabled: true,
+      volume: settings.volume,
+      bgmVolume: settings.bgmVolume,
+    });
+    audioService.play('ok');
+  }
+
+  const changeVolume = (volume: number) => {
+    setVolume(volume);
+    audioService.configure({
+      soundEnabled: settings.soundEnabled,
+      volume,
+      bgmVolume: settings.bgmVolume,
+    });
+  }
+
+  const changeBgmVolume = (bgmVolume: number) => {
+    setBgmVolume(bgmVolume);
+    audioService.configure({
+      soundEnabled: settings.soundEnabled,
+      volume: settings.volume,
+      bgmVolume,
+    });
+  }
+
+  const unlockAudio = () => {
+    audioService.unlockFromUserGesture();
+  };
+
+  const previewVolume = () => {
+    if (!settings.soundEnabled) return;
+    audioService.play('ok');
   }
 
   const startGame = () => {
@@ -433,7 +541,7 @@ function App() {
 
   if (appScreen === 'title') {
     return (
-      <div className="app-root">
+      <div className="app-root" onPointerDownCapture={unlockAudio}>
         <TopAdBanner />
         <div className="app-shell app-content">
           <TitleScreen
@@ -441,6 +549,11 @@ function App() {
             onOpenSettings={openSettings}
             onOpenHowTo={openRules}
             onOpenPlayRecord={openPlayRecord}
+            onOpenPrivacyPolicy={() => {
+              audioService.play('ok');
+              audioService.setBgmActive(false);
+              window.location.assign('/privacy-policy.html');
+            }}
             isStartDisabled={isStartingGame}
             version={APP_VERSION}
           />
@@ -450,8 +563,11 @@ function App() {
           isOpen={isViewSettings}
           soundEnabled={settings.soundEnabled}
           volume={settings.volume}
-          onToggleSound={() => setSoundEnabled(!settings.soundEnabled)}
-          onVolumeChange={setVolume}
+          bgmVolume={settings.bgmVolume}
+          onToggleSound={toggleSound}
+          onVolumeChange={changeVolume}
+          onVolumeCommit={previewVolume}
+          onBgmVolumeChange={changeBgmVolume}
           onClose={closeSettings}
         />
         <PlayRecordModal
@@ -464,7 +580,7 @@ function App() {
   }
 
   return (
-    <div className="app-root">
+    <div className="app-root" onPointerDownCapture={unlockAudio}>
       <div className="container play-screen">
         { countdown !== null && (
           <div className="shadow-overlay">
@@ -514,8 +630,11 @@ function App() {
           isOpen={isViewSettings}
           soundEnabled={settings.soundEnabled}
           volume={settings.volume}
-          onToggleSound={() => setSoundEnabled(!settings.soundEnabled)}
-          onVolumeChange={setVolume}
+          bgmVolume={settings.bgmVolume}
+          onToggleSound={toggleSound}
+          onVolumeChange={changeVolume}
+          onVolumeCommit={previewVolume}
+          onBgmVolumeChange={changeBgmVolume}
           onClose={closeSettings}
         />
       <header className="header">

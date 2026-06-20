@@ -68,9 +68,13 @@
 
 .settings-modal__row--slider {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 4ch;
+  grid-template-columns: 5em minmax(0, 1fr) 4ch;
   align-items: center;
   width: 100%;
+}
+
+.settings-modal__row--slider label {
+  white-space: nowrap;
 }
 
 .settings-modal__row--slider input {
