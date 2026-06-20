@@ -4,15 +4,21 @@ const SettingsModal = ({
   isOpen,
   soundEnabled,
   volume,
+  bgmVolume,
   onToggleSound,
   onVolumeChange,
+  onVolumeCommit,
+  onBgmVolumeChange,
   onClose,
 }: {
   isOpen: boolean;
   soundEnabled: boolean;
   volume: number;
+  bgmVolume: number;
   onToggleSound: () => void;
   onVolumeChange: (volume: number) => void;
+  onVolumeCommit?: () => void;
+  onBgmVolumeChange: (volume: number) => void;
   onClose: () => void;
 }) => {
   if (!isOpen) return null;
@@ -50,10 +56,28 @@ const SettingsModal = ({
             value={volume}
             disabled={!soundEnabled}
             onChange={(event) => onVolumeChange(Number(event.target.value))}
+            onPointerUp={() => onVolumeCommit?.()}
             aria-label="効果音スライダー"
           />
           <span className="settings-modal__volume-value" aria-live="polite">
             <span className="settings-modal__volume-number">{volume}</span>
+            <span className="settings-modal__volume-unit">%</span>
+          </span>
+        </div>
+        <div className={`settings-modal__row settings-modal__row--slider ${!soundEnabled ? 'settings-modal__row--disabled' : ''}`}>
+          <label htmlFor="settings-bgm-volume">BGM</label>
+          <input
+            id="settings-bgm-volume"
+            type="range"
+            min={0}
+            max={100}
+            value={bgmVolume}
+            disabled={!soundEnabled}
+            onChange={(event) => onBgmVolumeChange(Number(event.target.value))}
+            aria-label="BGMスライダー"
+          />
+          <span className="settings-modal__volume-value" aria-live="polite">
+            <span className="settings-modal__volume-number">{bgmVolume}</span>
             <span className="settings-modal__volume-unit">%</span>
           </span>
         </div>

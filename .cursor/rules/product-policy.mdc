@@ -7,7 +7,26 @@ alwaysApply: true
 
 実装・設計・機能提案の前に `docs/PRODUCT_POLICY.md` に従う。
 
+## 最優先方針
+
 - **なるはやリリース**と**広告収入**を最優先する。
 - 機能は**リリースに耐える最低限**に限定する。収益・リリースに直結しない拡張は提案のみに留め、着手はユーザーの明示指示後。
-- 画面仕様は `docs/design/` を参照。本方針を各設計書に重複記載しない。
+- スコープが曖昧な場合は、設計書の Must/AC を満たす範囲のみ対応する。
+
+## 実装前の確認
+
+- `docs/PRODUCT_POLICY.md` を正本として参照する。
+- 画面仕様は `docs/design/` を参照する。
+- UI 共通仕様は `docs/design/UI_COMMON.md` を参照する（`AppFooter` とコピーライト表示は Must）。
+
+## ドキュメント運用
+
+- プロダクト方針は `docs/PRODUCT_POLICY.md` を唯一の正本とし、他ドキュメントへ重複記載しない。
 - 実装タスク完了前は `docs/PRODUCT_POLICY.md` の実装後セルフレビュー（`.cursor/rules/post-implementation-review.mdc`）に従う。
+
+## English Summary (Short)
+
+- Prioritize fastest possible release and ad revenue.
+- Keep scope to MVP only; do not implement non-essential ideas without explicit user instruction.
+- Follow `docs/PRODUCT_POLICY.md`, `docs/design/`, and `docs/design/UI_COMMON.md` before coding.
+- `docs/PRODUCT_POLICY.md` is the single source of truth.
