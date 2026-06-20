@@ -121,7 +121,7 @@
 .settings-modal__close {
   align-self: center;
   background: transparent;
-  color: #fff;
+  color: var(--ui-icon-color);
   font-size: 2rem;
   line-height: 1;
   border: none;

@@ -1,3 +1,4 @@
+import { SquareMenu, SquareStar } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import StatusBar from "./StatusBar";
@@ -669,8 +670,12 @@ function App() {
           ))}
         </div>
         <AppFooter>
-          <button className="footer-button footer-button--menu" onClick={openMenu} aria-label="メニューを開く">⋯</button>
-          <button className={`footer-button ${(isFinished || isTimeOver) ? "" : "disabled"}`} onClick={openResult}>🏁</button>
+          <button className="footer-button footer-button--menu" onClick={openMenu} aria-label="メニューを開く">
+            <SquareMenu size={50} strokeWidth={3} aria-hidden />
+          </button>
+          <button className={`footer-button footer-button--result ${(isFinished || isTimeOver) ? "" : "disabled"}`} onClick={openResult} aria-label="結果を表示">
+            <SquareStar size={50} strokeWidth={3} aria-hidden />
+          </button>
         </AppFooter>
       </div>
     </div>

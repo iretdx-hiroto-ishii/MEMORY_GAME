@@ -1,3 +1,5 @@
+import { CircleX } from 'lucide-react';
+
 type PlayMenuModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -44,7 +46,7 @@ const PlayMenuModal = ({
           </button>
         </div>
         <button type="button" className="close-button" onClick={onClose} aria-label="メニューを閉じる">
-          ❎
+          <CircleX size={32} strokeWidth={3} aria-hidden />
         </button>
       </div>
     </div>

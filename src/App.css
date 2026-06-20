@@ -102,7 +102,7 @@
 .footer-button {
   background-color: transparent;
   font-size: 50px;
-  color: white;
+  color: var(--ui-icon-color);
   border: none;
   cursor: pointer;
 }
@@ -111,9 +111,17 @@
   line-height: 1;
 }
 
+.footer-button--result {
+  color: var(--ui-icon-color-result);
+}
+
+.footer-button--result:hover {
+  color: var(--ui-icon-color-result-hover);
+}
+
 .footer-button:hover {
   transform: scale(1.05);
-  color: black;
+  color: var(--ui-icon-color-hover);
 }
 
 .card {
@@ -213,7 +221,7 @@
   background-color: transparent;
   font-size: 2rem;
   line-height: 1;
-  color: white;
+  color: var(--ui-icon-color);
   border: none;
   cursor: pointer;
   align-self: center;
