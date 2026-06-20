@@ -95,7 +95,7 @@ flowchart LR
 | `record-total-score` | 行 | 累計獲得スコア | なし | ✅ |
 | `record-total-plays` | 行 | 総プレイ回数 | なし | ✅ |
 | `record-total-time` | 行 | 総プレイ時間 | なし | ✅ |
-| `btn-close` | ボタン | ❎ | ダイアログを閉じる | ✅ |
+| `btn-close` | ボタン | `CircleX`（Lucide） | ダイアログを閉じる | ✅ |
 | `app-footer` | 共通 [`AppFooter`](../../src/components/AppFooter.tsx) | コピーライト | なし | ✅ |
 
 ### 4.3 タイトル画面側の導線変更

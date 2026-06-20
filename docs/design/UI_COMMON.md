@@ -51,7 +51,7 @@
 import AppFooter from './components/AppFooter';
 
 <AppFooter>
-  {/* 画面固有ボタン（プレイ画面の ⋯ / 🏁 など） */}
+  {/* 画面固有ボタン（プレイ画面の SquareMenu / SquareStar など） */}
 </AppFooter>
 ```
 
@@ -65,11 +65,31 @@ import AppFooter from './components/AppFooter';
 |----------|-----|------|
 | 背景 | `#800020` | `src/index.css` |
 | 本文 | `#c8c8c8` | `src/index.css` |
-| アクセント | `#B38600` | 各 CSS |
+| アクセント（枠・構造） | `#B38600` | 各 CSS |
+| アイコン（通常） | `#E6C25A` | `--ui-icon-color`（`src/index.css`） |
+| アイコン（結果ボタン） | `#FFD966` | `--ui-icon-color-result` |
 
 ---
 
-## 4. ボタン文字サイズ規定（Must）
+## 4. アイコン（Lucide React）
+
+フッター・モーダル閉じるボタンは [`lucide-react`](https://lucide.dev/) を使用する。色は CSS 変数経由で `currentColor` を継承する。
+
+| 用途 | コンポーネント | size | strokeWidth | 色 |
+|------|----------------|------|-------------|-----|
+| メニュー（フッター） | `SquareMenu` | 50 | 3 | `--ui-icon-color` |
+| 結果表示（フッター） | `SquareStar` | 50 | 3 | `--ui-icon-color-result` |
+| 閉じる（各モーダル） | `CircleX` | 32 | 3 | `--ui-icon-color` |
+
+| 項目 | 規定 |
+|------|------|
+| ホバー（通常アイコン） | `--ui-icon-color-hover`（`#F0D070`） |
+| ホバー（結果アイコン） | `--ui-icon-color-result-hover`（`#FFE48A`） |
+| クリック領域 | 既存ボタンクラス（`footer-button` / `close-button` 等）を維持。アイコン size のみ変更 |
+
+---
+
+## 5. ボタン文字サイズ規定（Must）
 
 すべての主要ボタン（スタート / 設定 / プライバシーポリシー / 設定モーダル内トグル）の文字サイズは **16pt** を基準とする。
 
@@ -78,7 +98,7 @@ import AppFooter from './components/AppFooter';
 | 対象 | 画面遷移・設定操作に使うテキストボタン |
 | 文字サイズ | `16pt` |
 
-### 4.1 ダイアログ内ボタン文字サイズ規定（Must）
+### 5.1 ダイアログ内ボタン文字サイズ規定（Must）
 
 ダイアログ内に配置されるテキストボタンの文字サイズは **10pt** とする。
 
@@ -87,7 +107,7 @@ import AppFooter from './components/AppFooter';
 | 対象 | 設定ダイアログなど、モーダル内のテキストボタン |
 | 文字サイズ | `10pt` |
 
-### 4.2 遊び方ダイアログサイズ規定（Must）
+### 5.2 遊び方ダイアログサイズ規定（Must）
 
 遊び方ダイアログをサイズ基準とし、設定ダイアログ・RESULTダイアログも同一サイズ規定に合わせる。
 
@@ -99,7 +119,7 @@ import AppFooter from './components/AppFooter';
 | 最大高さ | ダイアログ領域内で `100%`（オーバー時はスクロール） |
 | 適用対象 | 遊び方 / 設定 / RESULT ダイアログ |
 
-### 4.3 ダイアログタイトル表示規定（Must）
+### 5.3 ダイアログタイトル表示規定（Must）
 
 設定ダイアログのタイトル表示を基準とし、遊び方・結果ダイアログも同一のタイトル帯表示に統一する。
 
@@ -114,16 +134,16 @@ import AppFooter from './components/AppFooter';
 | タイトルテキスト | `font-size: 1.6rem`, `letter-spacing: 2px`, `margin: 0` |
 | 適用対象 | 遊び方 / 設定 / 結果 ダイアログ |
 
-### 4.4 ダイアログ内コンテンツ・閉じるボタン規定（Must）
+### 5.4 ダイアログ内コンテンツ・閉じるボタン規定（Must）
 
 | 項目 | 規定 |
 |------|------|
 | 本文テキスト | `font-size: 1rem` |
 | 本文文字色 | `#fff`（ダイアログ内本文は白で統一） |
-| 閉じるボタン（❎） | `font-size: 2rem`, `align-self: center`, `background: transparent`, `border: none` |
+| 閉じるボタン | Lucide `CircleX`（`size={32}` `strokeWidth={3}`）、`close-button` クラス |
 | 適用対象 | 遊び方 / 設定 / 結果 ダイアログ |
 
-### 4.5 ダイアログコンポーネント分割規定（Must）
+### 5.5 ダイアログコンポーネント分割規定（Must）
 
 ダイアログ（モーダル）は必ず **`src/components/` 配下に個別の `.tsx` ファイルとして作成する**。親コンポーネント内にインラインで JSX を書かない。
 
@@ -134,7 +154,7 @@ import AppFooter from './components/AppFooter';
 | スタイル | ダイアログ固有の CSS が必要な場合は同名 `.css` を作成 |
 | 共通スタイル | `App.css` の共通クラス（`.shadow-overlay`, `.dialog-title-box` 等）はそのまま使用 |
 
-### 4.6 Viewport / スクロール規定（Must）
+### 5.6 Viewport / スクロール規定（Must）
 
 | 項目 | 規定 |
 |------|------|
@@ -148,7 +168,7 @@ import AppFooter from './components/AppFooter';
 
 ---
 
-## 5. 変更履歴
+## 6. 変更履歴
 
 | 日付 | 内容 |
 |------|------|
@@ -164,3 +184,4 @@ import AppFooter from './components/AppFooter';
 | 2026-06-07 | 4.4 にダイアログ本文文字色 `#fff` 統一規定を追加 |
 | 2026-06-07 | 4.6 画面全体の `100dvh` 管理・スクロール禁止・safe-area 考慮を追加 |
 | 2026-06-08 | 4.3 のタイトル上下線を、白色グラデーション（中央強調）仕様へ更新 |
+| 2026-06-20 | Lucide React アイコン規定・ゴールド系カラートークンを追加。セクション 4→5 を再番号 |
