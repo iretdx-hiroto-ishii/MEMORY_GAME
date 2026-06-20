@@ -2,6 +2,10 @@
   font-weight: 400;
   color: #c8c8c8;
   background-color: #800020;
+  --ui-icon-color: #e6c25a;
+  --ui-icon-color-hover: #f0d070;
+  --ui-icon-color-result: #ffd966;
+  --ui-icon-color-result-hover: #ffe48a;
   --card-width: 70px;
   --card-height: 105px;
 }

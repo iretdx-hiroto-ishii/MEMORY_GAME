@@ -1,3 +1,5 @@
+import { CircleX } from 'lucide-react';
+
 type ResultModalProps = {
   isOpen: boolean;
   point: number;
@@ -66,7 +68,7 @@ const ResultModal = ({
           </button>
         </div>
         <button className="close-button" onClick={onClose} aria-label="結果を閉じる">
-          ❎
+          <CircleX size={32} strokeWidth={3} aria-hidden />
         </button>
       </div>
     </div>

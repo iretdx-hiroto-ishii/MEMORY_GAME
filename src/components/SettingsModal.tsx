@@ -1,3 +1,4 @@
+import { CircleX } from 'lucide-react';
 import './settings-modal.css';
 
 const SettingsModal = ({
@@ -87,7 +88,7 @@ const SettingsModal = ({
           onClick={onClose}
           aria-label="設定を閉じる"
         >
-          ❎
+          <CircleX size={32} strokeWidth={3} aria-hidden />
         </button>
       </div>
     </div>
